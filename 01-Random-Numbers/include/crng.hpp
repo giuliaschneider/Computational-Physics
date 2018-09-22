@@ -1,12 +1,7 @@
-
-
 #ifndef CRNG
 #define CRNG
 
-#include <armadillo>
-
-
-void uniform_circle(int numberRNG);
+#include <iostream>
 
 
 class crng {
@@ -15,20 +10,22 @@ private:
   unsigned long int rdn;
   int c;
   int p;
-  arma::vec rdn_array;
+  int* rdn_array;
 
 public:
   int rng_max;
 
-
 private:
-  int generateNumber(unsigned long int rdn);
+  void generateNumber();
   void generateSequence();
 
 public:
   crng(int numberRNG, int p, int c, int seed);
-  arma::vec getSequence();
+  ~crng();
+  int* getSequence();
+  void saveSequence(char* filename);
 };
+
 
 
 #endif

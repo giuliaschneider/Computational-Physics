@@ -118,7 +118,7 @@ void Tests::compareRNG(){
   double chi2_3b = calculateChi2(rdn_array3b, k2, RAND_MAX);
   double chi2_4b = calculateChi2(rdn_array4b, k2, 1);
 
-
+/*
 
 
   ofstream outFile;
@@ -158,5 +158,5 @@ void Tests::compareRNG(){
   else {
     cout << "Could not create file: " << outputFileName << endl;
   }
-
+*/
 }

@@ -1,3 +1,3 @@
-set ( SOURCES crng.cpp Tests.cpp )
+set ( SOURCES crng.cpp  )
 
 add_library( RandomNumbers STATIC ${SOURCES} )

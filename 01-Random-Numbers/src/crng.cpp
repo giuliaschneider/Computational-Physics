@@ -8,69 +8,69 @@
 */
 
 #include "crng.hpp"
-#include <iostream>
-#include <math.h>
-#include <stdlib.h>
-#include <armadillo>
+#include "savedata.h"
+//#include <iostream>
+//#include <math.h>
+//#include <stdlib.h>
+//#include <armadillo>
 
 using namespace std;
 
 
 /**
-    @brief: prints random points homogeneously distributed within a circle
-    @param numberRNG:   number of random points
-    @return void
-*/
-void uniform_circle(int numberRNG){
-  int R = 1;
-  double phi = 0.0;
-  double r = 0.0;
-  for(int i=0;i<numberRNG;i++){
-    phi = (2*M_PI*rand())/RAND_MAX;
-    r = R*sqrt((1.0*rand())/RAND_MAX);
-    cout << r*cos(phi) << '\t' << r*sin(phi) << endl;
-  }
-}
-
-
-/**
-    @brief: Constructs a congruential RNG
-    @param numberRNG:   number of random points
-    @param p:           parameter of congruential RNG
-    @param c:           parameter of congruential RNG
-    @param seed:        seeds
+Constructor
+* @param numberRNG:   number of random points
+* @param p:           parameter of congruential RNG algorithm
+* @param c:           parameter of congruential RNG algorithm
+* @param seed:        seed
 */
 crng::crng(int numberRNG, int p, int c, int seed):
   numberRNG(numberRNG), p(p), c(c), rdn(seed){
     rng_max = p;
-    rdn_array.set_size( numberRNG );
-  }
-
-  /**
-      @brief:     calculates a random number using the congruential RNG algorithm
-      @param rdn: current random number
-      @return:    return the next random number
-  */
-int crng::generateNumber(unsigned long int rdn){
-  return rdn = (c*rdn)%p;
+    rdn_array = new int[numberRNG];
 }
 
 /**
-    @brief: calculates a sequence on random numbers
-    @return: void
+Destructor
+*/
+crng::~crng(){
+  delete[] rdn_array;
+}
+
+
+/**
+* Calculate a random number using the congruential RNG algorithm
+*/
+void crng::generateNumber(){
+  rdn = (c*rdn)%p;
+}
+
+
+/**
+* Calculate a sequence of random numbers
 */
 void crng::generateSequence(){
   for(int i=0;i<numberRNG;i++){
-    rdn_array(i) = rdn;
-    rdn = generateNumber(rdn);
+    rdn_array[i] = rdn;
+    generateNumber();
   }
 }
 
 /**
-    @brief: returns the sequence of random numbers
-    @return: arma::vec
+* Get a sequence of random numbers
+* @return: arma::vec
 */
-arma::vec crng::getSequence(){
+int* crng::getSequence(){
   generateSequence();
   return rdn_array;
+}
+
+/**
+* Save a sequence of random numbers to file
+* @param: char* filename
+* @return: arma::vec
+*/
+void crng::saveSequence(char* filename){
+  generateSequence();
+  printVector<int>(rdn_array, numberRNG);
 }
