@@ -44,3 +44,8 @@ CMakeCache.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
+# Directories #
+###############
+*results/
