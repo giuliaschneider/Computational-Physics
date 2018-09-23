@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import os as os
-from os.path import isfile, join, dirname
+from os.path import isfile, join, dirname, abspath
 
 import matplotlib as mpl
 mpl.use("pgf")
@@ -18,10 +18,11 @@ path = sys.argv[1]
 
 data = np.loadtxt((path))
 
-current_dic = os.getcwd()
+currentDir = os.getcwd()
+resultsDir = abspath(join(currentDir, "../results/figures"))
 
 def saveplot(fig, filename):
-    file_str =  join(dirname(dirname(dirname(current_dic))), 'report/figures/') + filename
+    file_str =  join(resultsDir, filename)
     fig.savefig(file_str + ".pgf",bbox_inches='tight')
     fig.savefig(file_str + ".png",bbox_inches='tight')
 
@@ -41,7 +42,7 @@ def square_test():
     fig.text(0.15,0.15,r"$p=31$, $c=3$", transform=ax.transAxes, bbox=dict(facecolor='white', alpha=0.9))
     ax.legend(loc="lower right", frameon=False, labelspacing=0.05)
     #fig.show()
-    saveplot(fig, "1a")
+    saveplot(fig, "1b")
 
 def cube_test():
     fig = plt.figure()
@@ -70,5 +71,5 @@ def circle():
 
 if __name__ == '__main__':
     #square_test()
-    cube_test()
-    #circle()
+    #cube_test()
+    circle()
