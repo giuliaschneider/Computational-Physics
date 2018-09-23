@@ -8,6 +8,7 @@ class crng {
 private:
   int numberRNG;
   unsigned long int rdn;
+  unsigned long int seed;
   int c;
   int p;
   int* rdn_array;
@@ -17,13 +18,13 @@ public:
 
 private:
   void generateNumber();
-  void generateSequence();
+  void generateSequence(int numberRNG);
 
 public:
-  crng(int numberRNG, int p, int c, int seed);
+  crng(int p, int c, int seed);
   ~crng();
-  int* getSequence();
-  void saveSequence(char* filename);
+  int* getSequence(int numberRNG);
+  void saveSequence(int numberRNG, char* filename);
 };
 
 

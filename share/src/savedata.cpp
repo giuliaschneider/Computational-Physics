@@ -80,20 +80,3 @@ void save_to_text(const char *header1, const char *header2, const char *header3,
     cout << "Could not create file: " << vfilename << endl;
   }
 }
-
-
-void save_to_text(const double *data, const int size, const char* vfilename){
-  ofstream outFile;
-  outFile.open(vfilename);
-
-  if(outFile.is_open()){
-    outFile.setf(ios::fixed, ios::floatfield);
-    outFile.precision(2);
-    for(int i=0; i < size; i++)
-    outFile << data[i] << endl;
-    outFile.close();
-  }
-  else {
-    cout << "Could not create file: " << vfilename << endl;
-  }
-}

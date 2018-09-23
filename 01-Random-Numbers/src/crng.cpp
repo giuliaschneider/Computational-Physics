@@ -24,10 +24,9 @@ Constructor
 * @param c:           parameter of congruential RNG algorithm
 * @param seed:        seed
 */
-crng::crng(int numberRNG, int p, int c, int seed):
-  numberRNG(numberRNG), p(p), c(c), rdn(seed){
+crng::crng(int p, int c, int seed):
+  p(p), c(c), seed(seed){
     rng_max = p;
-    rdn_array = new int[numberRNG];
 }
 
 /**
@@ -49,7 +48,9 @@ void crng::generateNumber(){
 /**
 * Calculate a sequence of random numbers
 */
-void crng::generateSequence(){
+void crng::generateSequence(int numberRNG){
+  rdn_array = new int[numberRNG];
+  rdn = seed;
   for(int i=0;i<numberRNG;i++){
     rdn_array[i] = rdn;
     generateNumber();
@@ -60,8 +61,8 @@ void crng::generateSequence(){
 * Get a sequence of random numbers
 * @return: arma::vec
 */
-int* crng::getSequence(){
-  generateSequence();
+int* crng::getSequence(int numberRNG){
+  generateSequence(numberRNG);
   return rdn_array;
 }
 
@@ -70,7 +71,7 @@ int* crng::getSequence(){
 * @param: char* filename
 * @return: arma::vec
 */
-void crng::saveSequence(char* filename){
-  generateSequence();
-  printVector<int>(rdn_array, numberRNG);
+void crng::saveSequence(int numberRNG, char* filename){
+  generateSequence(numberRNG);
+  save_to_text<int>(rdn_array, numberRNG, filename);
 }
