@@ -2,8 +2,8 @@
   CS-11
   @file     crng.cpp
   @author   Giulia Schneider
-  @date     24.04.2018
-  *version  1.0
+  @date     25.09.2018
+  @version  1.0
   @brief    Generates random numbers using a congruential RNG algorithm
 */
 

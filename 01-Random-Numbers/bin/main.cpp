@@ -67,10 +67,10 @@ int main(){
   cout << "Park and Miller RNG" << ", n = " << n2 ;
   cout << ", Chi2 = " << chi2 << endl;
 
-  int* rdn_array3 = new int[n1];
-  int* rdn_array3b = new int[n2];
-  double* rdn_array4 = new double[n1];
-  double* rdn_array4b = new double[n2];
+  int* rdn_array3 = new int[n1]();
+  int* rdn_array3b = new int[n2]();
+  double* rdn_array4 = new double[n1]();
+  double* rdn_array4b = new double[n2]();
 
   for(int i=0;i<n1;i++){
     rdn_array3[i] = rand();

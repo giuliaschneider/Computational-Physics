@@ -2,7 +2,7 @@
   CS-11
   @file     stats.cpp
   @author   Giulia Schneider
-  @date     24.94.2018
+  @date     25.09.2018
   *version  1.0
   @brief    Calculates the histogram and the Chi2-Value for a sequence of random numbers
 */
