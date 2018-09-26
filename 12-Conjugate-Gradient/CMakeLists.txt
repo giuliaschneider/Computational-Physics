@@ -4,7 +4,7 @@ project (code)
 link_directories("/usr/lib64")
 link_directories("/opt/local/var/macports/sources/rsync.macports.org/macports/release/tarballs/ports/science")
 
-find_package(Armadillo REQUIRED) 
+find_package(Armadillo REQUIRED)
 
 set (cmake -DCMAKE_BUILD_TYPE=RELEASE ..)
 
@@ -21,4 +21,4 @@ add_subdirectory( src )
 set( LIB ${LIB} fd )
 
 add_executable( main.out main.cpp )
-target_link_libraries( main.out ${LIB} )
+target_link_libraries( main.out ${LIB} ${ARMADILLO_LIBRARIES})

@@ -20,82 +20,52 @@ using namespace std;
 
 namespace comphys{
 
-PDEintegrator::PDEintegrator(int N, arma::vec b, double atol, string vfilename):
-  N(N), b(b), atol(atol),vfilename(vfilename) {
+PDEintegrator::PDEintegrator(int N, arma::vec &b,  double tol, string vfilename):
+  N(N), b(b), tol(tol), vfilename(vfilename) {
+
     dx = 1.0/N;
     n_innergrid = N-2;
-    psi.set_size((N-2)*(N-2));
-    psi.fill(0.0);
-    cout << "Done... " << endl;
+
+    setA();
+    initalizePsi();
+    conjugateGradient();
   }
 
-
-double PDEintegrator::update_psi(int position){
-  if(position==0){ //upper-left corner
-    return 0.25*(psi(position+1)+psi(position+n_innergrid)) - b(position);
-  }
-  else if(position==n_innergrid-1){ //upper-right corner
-    return 0.25*(psi(position-1)+psi(position+n_innergrid)) - b(position);
-  }
-  else if(position==n_innergrid*n_innergrid-n_innergrid){ //lower-left corner
-    return 0.25*(psi(position+1)+psi(position-n_innergrid)) - b(position);
-  }
-  else if(position==n_innergrid*n_innergrid-1){
-    return 0.25*(psi(position-1)+psi(position-n_innergrid)) - b(position);
-  }
-  else if(position <= n_innergrid-1){ // upper boundary
-    return 0.25*(psi(position-1)+psi(position+1)+psi(position+n_innergrid)) - b(position);
-  }
-  else if(position >= n_innergrid*n_innergrid-n_innergrid){ // lower boundary
-    return 0.25*(psi(position-1)+psi(position+1)+psi(position-n_innergrid)) - b(position);
-  }
-  else if(position%n_innergrid==0){ // left boundary
-    return 0.25*(psi(position+1)+psi(position-n_innergrid)+psi(position+n_innergrid)) - b(position);
-  }
-  else if(position%n_innergrid==n_innergrid-1){// right boundary
-    return 0.25*(psi(position-1)+psi(position-n_innergrid)+psi(position+n_innergrid)) - b(position);
-  }
-  else{
-    return 0.25*(psi(position-1)+psi(position+1)+psi(position-n_innergrid)+psi(position+n_innergrid)) - b(position);
-  }
+void PDEintegrator::setA(){
+  cout << "Setting A" << endl;
+  A.set_size((n_innergrid*n_innergrid), (n_innergrid*n_innergrid));
+  A.diag().fill(-4);
+  A.diag(-1).fill(1);
+  A.diag(1).fill(1);
+  A.diag(-3).fill(1);
+  A.diag(3).fill(1);
 }
 
-void PDEintegrator::Jacobi(){
-  cout << "Jacobi method" << endl;
-  arma::vec psi_new((N-2)*(N-2),arma::fill::zeros);
-  double delta = 100.0;
-  int numit = 0;
-  while(delta >= atol){
-    numit++;
-    for(int i=0;i<(N-2)*(N-2);i++){
-      psi_new(i) = update_psi(i);
-    }
-    delta = arma::norm(psi_new-psi)/arma::norm(psi);
-    psi = psi_new;
-    //cout << numit << ".Iteration" << endl;
-  }
-  psi.save(vfilename,arma::raw_ascii);
+void PDEintegrator::initalizePsi(){
+  psi.set_size((N-2)*(N-2));
+  psi.randu();
+  r = b - A*psi;
+  d = r;
 }
 
-void PDEintegrator::GaussSeidel(){
-  cout << "Gauss Seidel " << endl;
-  double delta = 100.0;
-  int numit = 0;
-  double psi_norm = 0.0;
-  double psi_n_psi_norm = 0.0;
-  double psi_new = 0.0;
-  while(delta >= atol){
-    numit++;
-    psi_norm = arma::norm(psi);
-    psi_n_psi_norm = 0.0;
-    for(int i=0;i<(N-2)*(N-2);i++){
-       psi_new = update_psi(i);
-       psi_n_psi_norm += pow(psi_new-psi(i),2);
-       psi(i) = psi_new;
-    }
-    delta = sqrt(psi_n_psi_norm)/psi_norm;
-    cout << numit << ".Iteration" << endl;
+void PDEintegrator::gradientStep(){
 
+  c = 1.0/as_scalar(d.st()*A*d);
+  alpha = c*as_scalar(r.st()*d);
+  psi += alpha*d;
+  r = b - A*psi;
+  d = r - (c*as_scalar(r.st()*A*d)) * d;
+
+
+}
+
+void PDEintegrator::conjugateGradient(){
+  int i = 0;
+  while(as_scalar(r.st()*r) >= tol){
+    cout << "Iteration = " << i << endl;
+    cout << "Psi = " << psi.st() << endl;
+    gradientStep();
+    i++;
   }
   psi.save(vfilename,arma::raw_ascii);
 }

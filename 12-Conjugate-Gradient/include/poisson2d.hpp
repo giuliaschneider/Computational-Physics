@@ -13,12 +13,12 @@ private:
   int n_charges;
   double* x0;
   double* y0;
-  double atol;
+  double tol;
   double dx;
   arma::vec rho;
   arma::mat A;
   std::string method;
-  std::string charge_distribution
+  std::string charge_distribution;
   std::string filename;
 private:
   void set_rho();

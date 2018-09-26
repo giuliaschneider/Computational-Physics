@@ -23,12 +23,10 @@ using namespace std;
 namespace comphys{
 
 poisson2d::poisson2d(int N, int n_charges, double* x0, double* y0, double atol, string method, string charge_distribution):
-  N(N), n_charges(n_charges), atol(atol), x0(x0), y0(y0), method(method), charge_distribution(charge_distribution){
-    cout << "Construct... " << endl;
+  N(N), n_charges(n_charges), tol(atol), x0(x0), y0(y0), method(method), charge_distribution(charge_distribution){
     dx = 1.0/N;
     n_innergrid = N-2;
     set_rho();
-    cout << "Done... " << endl;
   }
 
 poisson2d::~poisson2d(){
@@ -41,9 +39,8 @@ void poisson2d::set_rho(){
     @param t: current time step
     @return arma::vec right hand side function of y' = f(y)
 */
-
+  rho.set_size(n_innergrid*n_innergrid);
   if(charge_distribution=="point charge"){
-    rho.set_size(n_innergrid*n_innergrid);
     for(int icharge=0;icharge<n_charges;icharge++){
       int i = int(x0[icharge]*n_innergrid);
       int j = int(y0[icharge]*n_innergrid);
@@ -51,30 +48,24 @@ void poisson2d::set_rho(){
       cout << "kcharge = " << k_charge << endl;
       rho[k_charge] = -0.25;
     }
-    else if(charge_distribution=="homogeneous"){
-      rho.fill(1);
-    }
-    else{
-      rho.fill(0);
-    }
   }
+  else if(charge_distribution=="homogeneous"){
+    rho.fill(1);
+  }
+  else{
+    rho.fill(0);
+  }
+
   //cout << rho << endl;
 }
 
 void poisson2d::calc_Poisson(){
-
-  if(method=="Jacobi"){
-    filename =  "python_scripts/Jacobi_ncharge_1_05.txt";
-    PDEintegrator integrator(N, rho, atol,filename);
-    integrator.Jacobi();
-  }
-  else if(method=="Gauss Seidel"){
-    filename =  "python_scripts/GaussSeidel_ncharge_1_05.txt";
-    PDEintegrator integrator(N, rho, atol,filename);
-    integrator.GaussSeidel();
-  }
-  else if(method=="Conjugate gratdient"){
-    
+  cout << "N = " << N << endl;
+  cout << "Atol = " << tol << endl;
+  if(method=="Conjugate gradient"){
+    filename =  "results/Gradient.txt";
+    PDEintegrator integrator(N, rho, tol, filename);
+    integrator.conjugateGradient();
   }
 }
 
