@@ -50,7 +50,7 @@ void poisson2d::set_rho(){
     }
   }
   else if(charge_distribution=="homogeneous"){
-    rho.fill(1);
+    rho.fill(1*dx*dx);
   }
   else{
     rho.fill(0);
@@ -62,7 +62,17 @@ void poisson2d::set_rho(){
 void poisson2d::calc_Poisson(){
   cout << "N = " << N << endl;
   cout << "Atol = " << tol << endl;
-  if(method=="Conjugate gradient"){
+  if(method=="Jacobi"){
+    filename =  "results/Jacobi_ncharge_1_05.txt";
+    PDEintegrator integrator(N, rho, tol,filename);
+    integrator.Jacobi();
+  }
+  else if(method=="Gauss Seidel"){
+    filename =  "results/GaussSeidel_ncharge_1_05.txt";
+    PDEintegrator integrator(N, rho, tol,filename);
+    integrator.GaussSeidel();
+  }
+  else if(method=="Conjugate gradient"){
     filename =  "results/Gradient.txt";
     PDEintegrator integrator(N, rho, tol, filename);
     integrator.conjugateGradient();

@@ -22,12 +22,16 @@ private:
   double alpha;
   std::string vfilename;
 private:
+  double update_psi(int position);
 public:
   PDEintegrator(int N, arma::vec &b, double tol, std::string vfilename);
   void setA();
   void initalizePsi();
   void gradientStep();
   void conjugateGradient();
+  void Jacobi();
+  void GaussSeidel();
+
 
 };
 

@@ -15,8 +15,8 @@ int main(){
   double x0[1] = {0.75};
   double y0[1] = {0.75};
   string method = "Conjugate gradient";
-  string charge = "point charge";
-  comphys::poisson2d gradient(50, n_charges, x0, y0, 0.00001,method,charge);
+  string charge = "homogeneous";
+  comphys::poisson2d gradient(50, n_charges, x0, y0, 0.00001, method, charge);
   gradient.calc_Poisson();
 
   /*

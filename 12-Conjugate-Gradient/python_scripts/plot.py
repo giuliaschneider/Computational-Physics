@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import os as os
-from os.path import isfile, join, dirname
+from os.path import isfile, join, dirname, abspath
 
 import matplotlib as mpl
 mpl.use("pgf")
@@ -22,16 +22,18 @@ def getNumber(s):
 
 
 current_dic = os.getcwd()
-files = [f for f in os.listdir(current_dic) if ".txt" in f]
+resultsDir = abspath(join(current_dic, "../results"))
+files = [f for f in os.listdir(resultsDir) if ".txt" in f]
 #files = sorted(files,key=getNumber)
 
 def saveplot(fig, filename):
-    file_str =  join(dirname(dirname(current_dic)), 'report/figures/') + filename
+    file_str =  join(resultsDir,"figures",filename)
     fig.savefig(file_str + ".pgf",bbox_inches='tight')
     fig.savefig(file_str + ".png",bbox_inches='tight')
 
 def plot_potential():
     for i, filename in enumerate(files):
+        filename = join(resultsDir, filename)
         data = np.loadtxt(filename)
         N = int(np.sqrt(data.size))
         print(N)
@@ -51,7 +53,7 @@ def plot_potential():
         #ax.set_ylabel("$z$")
         #ax.set_xlim(0,11)
         ax.legend(loc="best", frameon=False, labelspacing=0.05)
-        #fig.colorbar(cs)
+        fig.colorbar(cs)
         fname = filename[:-4]
         saveplot(fig, fname)
         plt.close(fig)
