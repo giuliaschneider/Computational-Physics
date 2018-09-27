@@ -22,8 +22,8 @@ using namespace std;
 
 namespace comphys{
 
-poisson2d::poisson2d(int N, int n_charges, double* x0, double* y0, double atol, string method, string charge_distribution):
-  N(N), n_charges(n_charges), tol(atol), x0(x0), y0(y0), method(method), charge_distribution(charge_distribution){
+poisson2d::poisson2d(int N, int n_charges, double* x0, double* y0, double tol, string method, string charge_distribution):
+  N(N), n_charges(n_charges), tol(tol), x0(x0), y0(y0), method(method), charge_distribution(charge_distribution){
     dx = 1.0/N;
     n_innergrid = N-2;
     set_rho();
@@ -64,18 +64,22 @@ void poisson2d::calc_Poisson(){
   cout << "Atol = " << tol << endl;
   if(method=="Jacobi"){
     filename =  "results/Jacobi_ncharge_1_05.txt";
-    PDEintegrator integrator(N, rho, tol,filename);
+    PDEintegrator integrator(N, rho, tol, filename);
     integrator.Jacobi();
   }
   else if(method=="Gauss Seidel"){
     filename =  "results/GaussSeidel_ncharge_1_05.txt";
-    PDEintegrator integrator(N, rho, tol,filename);
+    PDEintegrator integrator(N, rho, tol, filename);
     integrator.GaussSeidel();
   }
   else if(method=="Conjugate gradient"){
-    filename =  "results/Gradient.txt";
+    filename =  "results/Gradient_w0pre";
     PDEintegrator integrator(N, rho, tol, filename);
-    integrator.conjugateGradient();
+    integrator.conjugateGradient(false, 500);
+
+    filename =  "results/Gradient_wpre";
+    PDEintegrator integrator2(N, rho, tol, filename);
+    integrator2.conjugateGradient(true, 500);
   }
 }
 

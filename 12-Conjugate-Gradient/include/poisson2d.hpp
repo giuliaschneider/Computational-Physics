@@ -23,7 +23,7 @@ private:
 private:
   void set_rho();
 public:
-  poisson2d(int N, int n_charges, double* x0, double* y0, double atol, std::string method, std::string charge_distribution);
+  poisson2d(int N, int n_charges, double* x0, double* y0, double tol, std::string method, std::string charge_distribution);
   ~poisson2d();
   void calc_Poisson();
 };

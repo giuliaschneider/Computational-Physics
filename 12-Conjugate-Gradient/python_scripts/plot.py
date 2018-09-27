@@ -23,7 +23,7 @@ def getNumber(s):
 
 current_dic = os.getcwd()
 resultsDir = abspath(join(current_dic, "../results"))
-files = [f for f in os.listdir(resultsDir) if ".txt" in f]
+files = [f for f in os.listdir(resultsDir) if "err.txt" in f]
 #files = sorted(files,key=getNumber)
 
 def saveplot(fig, filename):
@@ -33,8 +33,8 @@ def saveplot(fig, filename):
 
 def plot_potential():
     for i, filename in enumerate(files):
-        filename = join(resultsDir, filename)
-        data = np.loadtxt(filename)
+        filepath = join(resultsDir, filename)
+        data = np.loadtxt(filepath)
         N = int(np.sqrt(data.size))
         print(N)
 
@@ -59,7 +59,33 @@ def plot_potential():
         plt.close(fig)
 
 
+def plot_convergence():
+    fig = plt.figure(1,(8.5/2.54,8.5/2.54))
+    ax = fig.add_subplot(1,1,1)
+
+    labels = ["without preconditioning", "with preconditioning"]
+
+    for i, filename in enumerate(files):
+        print(filename)
+        filepath = join(resultsDir, filename)
+        data = np.loadtxt(filepath)
+        N = data.size
+        print(N)
+        iteration = np.arange(N)
+
+        ax.loglog(iteration, data, label = labels[i])
+        ax.set_xlabel("$\log(N)$")
+        ax.set_ylabel("$\log(r_i^Tr_i)$")
+        ax.legend(loc="best", frameon=False, labelspacing=0.05)
+
+    fname = "convergence"
+    saveplot(fig, fname)
+    plt.close(fig)
+
+
+
 
 
 if __name__ == '__main__':
-    plot_potential()
+    #plot_potential()
+    plot_convergence()

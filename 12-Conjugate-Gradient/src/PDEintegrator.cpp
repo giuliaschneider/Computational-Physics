@@ -26,9 +26,7 @@ PDEintegrator::PDEintegrator(int N, arma::vec &b,  double tol, string vfilename)
     dx = 1.0/N;
     n_innergrid = N-2;
 
-    setA();
-    initalizePsi();
-    //conjugateGradient();
+    cout << "tol = " << tol << endl;
   }
 
 void PDEintegrator::setA(){
@@ -41,6 +39,13 @@ void PDEintegrator::setA(){
   A = kron(A,D);
   A.diag(-n_innergrid).fill(1); A.diag(n_innergrid).fill(1);
   //cout << A << endl;
+}
+
+void PDEintegrator::setP(){
+  P = diagmat(A)/(A(1,1)*A(1,1));
+  //cout << P << endl;
+  A = P*A;
+  b = P*b;
 }
 
 void PDEintegrator::initalizePsi(){
@@ -57,19 +62,30 @@ void PDEintegrator::gradientStep(){
   psi += alpha*d;
   r = b - A*psi;
   d = r - (c*as_scalar(r.st()*A*d)) * d;
-
+  err = as_scalar(r.st()*r);
 
 }
 
-void PDEintegrator::conjugateGradient(){
+void PDEintegrator::conjugateGradient(bool precondition, int maxIter){
+
   int i = 0;
-  while(as_scalar(r.st()*r) >= tol){
+  setA();
+  initalizePsi();
+  if(precondition){
+    setP();
+  }
+
+  arma::vec errVector(maxIter,arma::fill::zeros);
+  while( err >= tol and i < maxIter){
     cout << "Iteration = " << i << endl;
     //cout << "Psi = " << psi.st() << endl;
+    errVector(i) = err;
     gradientStep();
     i++;
   }
-  psi.save(vfilename,arma::raw_ascii);
+  psi.save(vfilename+".txt",arma::raw_ascii);
+  arma::vec errToSave = errVector.head(i);
+  errToSave.save(vfilename+"_err.txt", arma::raw_ascii);
 }
 
 
