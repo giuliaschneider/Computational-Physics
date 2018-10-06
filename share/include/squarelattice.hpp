@@ -2,6 +2,7 @@
 #ifndef SQUARELATTICE
 #define SQUARELATTICE
 
+#include <string>
 
 struct Coordinates{
   int x;
@@ -37,7 +38,8 @@ public:
   void printLattice();
   void printVector();
   void saveLattice(const char* vfilename);
-  void printToPPM(const char* vfilename="output.ppm");
+  void saveToPPM(const std::string& vfilename);
+  void saveToPng(const std::string& filename);
 
 private:
 

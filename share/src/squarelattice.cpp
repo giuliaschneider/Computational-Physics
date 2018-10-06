@@ -1,10 +1,21 @@
-
+/**
+  CS-11
+  @file     squarelattic.cpp
+  @author   Giulia Schneider
+  @date     06.10.2018
+  *version  1.0
+  @brief    Defines a square lattice of size L*L
+*/
 
 
 #include "squarelattice.hpp"
+#include <string>
 #include<iostream>
 #include <iomanip>      // std::setw
 #include<fstream>
+#include <cstdlib>
+
+
 
 
 using namespace std;
@@ -12,6 +23,8 @@ using namespace std;
 
 squarelattice::squarelattice(int L):
 L(L){
+  cout << "Construction Square" << endl;
+
   N = L*L;
   sites = new int[N]();
 }
@@ -45,6 +58,41 @@ void squarelattice::getNeighbors(Coordinates crd){
 
 
 void squarelattice::getNeighbors(int position){
+  if(position < L){ // upper boundary
+    north = -1;
+    south = position+L;
+  }
+  else if(position >= (L*(L-1))){ //lower boundary
+    north = position-L;
+    south = -1;
+  }
+  else { // not on boundary
+    north = position-L;
+    south = position+L;
+  }
+
+  if(position%L == 0){ // eastern boundary
+    east = -1;
+    west = position+1;
+  }
+  else if(position%L == (L-1)){ //western boundary
+    east = position-1;
+    west = -1;
+  }
+  else { // not on boundary
+    east = position-1;
+    west = position+1;
+  }
+}
+
+
+void squarelattice::getPeriodicNeighbors(Coordinates crd){
+  int position = getPosition(crd);
+  getNeighbors(position);
+}
+
+
+void squarelattice::getPeriodicNeighbors(int position){
   if(position < L){ // upper boundary
     north = (L*(L-1)) + position;
     south = position+L;
@@ -131,7 +179,7 @@ void squarelattice::saveLattice(const char* vfilename){
 
 
 
-void squarelattice::printToPPM(const char* vfilename){
+void squarelattice::saveToPPM(const string& vfilename){
   int  i, j, k, l;
   int vwidth = L;
   int vheight = L;
@@ -163,6 +211,21 @@ void squarelattice::printToPPM(const char* vfilename){
         }
       }
       out << endl;
-
   out.close ();
+}
+
+
+void squarelattice::saveToPng(const string& filename){
+  string filename_ppm;
+  filename_ppm = filename;
+  filename_ppm.erase (filename_ppm.end()-4, filename_ppm.end());
+  filename_ppm += ".ppm";
+  saveToPPM(filename_ppm);
+
+
+  // rm automatically deletes the ppm-file to save memory (removes test002.ppm)
+  char cmd[160];
+  sprintf(cmd,"convert %s %s; rm -f %s",
+          filename_ppm.c_str(), filename.c_str(), filename_ppm.c_str());
+  system(cmd);
 }

@@ -1,3 +1,3 @@
-set ( SOURCES Percolation.cpp Forestfire.cpp )
+set ( SOURCES Percolation.cpp)
 
 add_library( Percolation STATIC ${SOURCES} )

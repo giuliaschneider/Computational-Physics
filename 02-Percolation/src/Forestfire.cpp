@@ -2,14 +2,14 @@
   CS-11
   @file     Forestfire.cpp
   @author   Giulia Schneider
-  @date     03.05.2018
+  @date     06.10.2018
   *version  1.0
-  @brief    Implementation of the Burning algorithm
+  @brief    Implementation of the burning algorithm
             and evaluation of the results
 */
 
 #include "Forestfire.hpp"
-#include "Percolation.hpp"
+#include "percolationlattice.hpp"
 #include "savedata.h"
 #include <iostream>
 #include <fstream>
@@ -18,17 +18,17 @@
 
 using namespace std;
 
-Forestfire::Forestfire(int N): N(N), Forest(N){
+Forestfire::Forestfire(int L): L(L), Forest(L){
 }
 
 void Forestfire::startFire(){
   /**
-      @brief: creats a lattice and sets the first row equal to zero,
-      @return void
+  * sets the occupied sites in the first row equal to two
   */
 
-  Forest.createLattice(p,1);
-  for(int i=0;i<N;i++){
+  Forest.setLattice(p,1);
+
+  for(int i=0;i<L;i++){
     if(Forest.lat[i]!=0){
       Forest.lat[i] = 2;
     }
@@ -230,7 +230,7 @@ void Forestfire::FireStatistics(int n_experiments){
 
 void Forestfire::FireStatistics_different_p(int n_experiments){
   /**
-      @brief: evaluates the Burning method for differend occupation probabilites p 
+      @brief: evaluates the Burning method for differend occupation probabilites p
       @param: n_experiments: number of experiments to be reapeated for statistics
       @return void
   */

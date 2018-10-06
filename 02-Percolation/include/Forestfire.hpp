@@ -10,8 +10,8 @@ public:
 private:
   double p;
   double z;
-  int N;
-  Percolation Forest;
+  int L;
+  percolationlattice Forest;
   char filename[160];
   int t;
   int neighborNorth;
