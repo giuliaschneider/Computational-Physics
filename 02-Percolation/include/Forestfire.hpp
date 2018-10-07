@@ -24,7 +24,6 @@ private:
   bool bottom_reached;
   int shortest_path;
   int lifeTime;
-
   double avg_spanningCluster;
   double avg_shortest_path;
   double avg_lifeTime;

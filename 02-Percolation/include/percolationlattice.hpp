@@ -23,14 +23,12 @@ public:
   percolationlattice(int L);
   percolationlattice(int L, double p);
   ~percolationlattice();
-
   void setValue(int position, int value);
   int getValue(int position);
   int* getNeighboringValues(int position);
   int* getNeighbors(int position);
   void setLattice(double p,int color);
   void saveFigure(char *filename, int* r, int* g, int* b);
-
   void setLattice_differentProbabilities();
 };
 
