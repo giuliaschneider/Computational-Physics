@@ -18,13 +18,20 @@ private:
   char filename_png[160];
 public:
   squarelattice *lat;
+  int neighbors[4];
 public:
   percolationlattice(int L);
   percolationlattice(int L, double p);
   ~percolationlattice();
+
+  void setValue(int position, int value);
+  int getValue(int position);
+  int* getNeighboringValues(int position);
+  int* getNeighbors(int position);
   void setLattice(double p,int color);
-  void calc_different_p();
-  void saveFigure(char *filename);
+  void saveFigure(char *filename, int* r, int* g, int* b);
+
+  void setLattice_differentProbabilities();
 };
 
 #endif

@@ -1,7 +1,10 @@
 #ifndef FORESTFIRE
 #define FORESTFIRE
 
-#include "Percolation.hpp"
+#include "percolationlattice.hpp"
+
+
+
 
 class Forestfire{
 
@@ -11,21 +14,17 @@ private:
   double p;
   double z;
   int L;
-  percolationlattice Forest;
+  percolationlattice* Forest;
   char filename[160];
   int t;
-  int neighborNorth;
-  int neighborEast;
-  int neighborSouth;
-  int neighborWest;
+  int* neighbors;
+  int* neighboringValues;
   bool burntNeighbor;
   bool burntNeighbor_thisTimeStep;
   bool bottom_reached;
   int shortest_path;
   int lifeTime;
-  //int *vec_spanningCluster;
-  //int *vec_shortest_path;
-  //int *vec_lifeTime;
+
   double avg_spanningCluster;
   double avg_shortest_path;
   double avg_lifeTime;
@@ -35,13 +34,12 @@ private:
 private:
   void startFire();
   void burnNeighbors(int position, int t);
-  void printFire(int &vlx, int &vly, const int &vwidth, const int &vheight, int &t, const char* vfilename="output.ppm");
+  void stats(int n_experiments);
 public:
-  Forestfire(int N);
+  Forestfire(int N, double p);
   ~Forestfire();
   void BurningMethod(bool printFigures);
-  void FireStatistics(int n_experiments);
-  void FireStatistics_different_p(int n_experiments);
+  void stats_differentProbabilities(int n_experiments);
 };
 
 #endif

@@ -16,6 +16,9 @@
 #include <cstdlib>
 
 
+#define ImageWidth 1000  //image width
+#define ImageHeight 1000 //image height
+
 
 
 using namespace std;
@@ -49,6 +52,15 @@ void squarelattice::setValue(Coordinates crd, int value){
   sites[position] = value;
 }
 
+
+int squarelattice::getValue(int position){
+  return sites[position];
+}
+
+int squarelattice::getValue(Coordinates crd){
+  int position = getPosition(crd);
+  return sites[position];
+}
 
 
 void squarelattice::getNeighbors(Coordinates crd){
@@ -129,16 +141,46 @@ void squarelattice::getNeighboringValues(int position){
   cout << "West " << west << ", " << sites[west]<< endl;
   */
 
-  neighboringValues[0] = sites[north];
-  neighboringValues[1] = sites[south];
-  neighboringValues[2] = sites[east];
-  neighboringValues[3] = sites[west];
+  if(north==-1){neighboringValues[0] = 0;}
+  else{neighboringValues[0] = sites[north];}
+
+  if(south==-1){neighboringValues[1] = 0;}
+  else{neighboringValues[1] = sites[south];}
+
+  if(east==-1){neighboringValues[2] = 0;}
+  else{neighboringValues[2] = sites[east];;}
+
+  if(west==-1){neighboringValues[3] = 0;}
+  else{neighboringValues[3] = sites[west];}
+
 }
 
 void squarelattice::getNeighboringValues(Coordinates crd){
   int position = getPosition(crd);
   getNeighboringValues(position);
 }
+
+
+void squarelattice::getPeriodicNeighboringValues(int position){
+  getPeriodicNeighbors(position);
+  /*
+  cout << "North " << north << ", " << sites[north] << endl;
+  cout << "South " << south << ", " << sites[south]<< endl;
+  cout << "East " << east << ", " << sites[east]<< endl;
+  cout << "West " << west << ", " << sites[west]<< endl;
+  */
+
+  neighboringValues[0] = sites[north];
+  neighboringValues[1] = sites[south];
+  neighboringValues[2] = sites[east];
+  neighboringValues[3] = sites[west];
+}
+
+void squarelattice::getPeriodicNeighboringValues(Coordinates crd){
+  int position = getPosition(crd);
+  getPeriodicNeighboringValues(position);
+}
+
 
 void squarelattice::printLattice(){
   cout << "Printing" << endl;
@@ -179,23 +221,12 @@ void squarelattice::saveLattice(const char* vfilename){
 
 
 
-void squarelattice::saveToPPM(const string& vfilename){
+void squarelattice::saveToPPM(const string& vfilename,  int* r, int* g, int* b){
   int  i, j, k, l;
-  int vwidth = L;
-  int vheight = L;
+  int vwidth = ImageWidth;
+  int vheight = ImageHeight;
   int vw= vwidth/L, vh=vheight/L;
-  int r[10], g[10], b[10];
 
-  r[0]= 255; g[0]= 255; b[0]= 255; //white  use 0 in your lattice if you want to color it white
-  r[1]=   0; g[1]=   0; b[1]=   0; //green  use 1 in your lattice if you want to color it green
-  r[2]=  98; g[2]=  62; b[2]=  39; //red
-  r[3]= 126; g[3]=  80; b[3]=  51; //black
-  r[4]= 145; g[4]=  84; b[4]=  54; //blue
-  r[5]= 149; g[5]=  95; b[5]=  60; //blue
-  r[6]= 196; g[6]= 124; b[6]=  79; //blue
-  r[7]= 220; g[7]= 139; b[7]=  89; //blue
-  r[8]= 255; g[8]= 176; b[8]= 112; //blue
-  r[9]= 255; g[9]= 195; b[9]= 124; //blue
   ofstream out (vfilename);
 
   out << "P3" << endl;
@@ -207,7 +238,8 @@ void squarelattice::saveToPPM(const string& vfilename){
       for (k=0; k<L; k++)
       {
         for (l=0; l<vw; l++)
-        { out << r[sites[k+i*L]] << " " << g[sites[k+i*L]] << " " << b[sites[k+i*L]] << " ";
+        { out << r[sites[k+i*L]] << " " << g[sites[k+i*L]];
+          out << " " << b[sites[k+i*L]] << " ";
         }
       }
       out << endl;
@@ -215,15 +247,15 @@ void squarelattice::saveToPPM(const string& vfilename){
 }
 
 
-void squarelattice::saveToPng(const string& filename){
+void squarelattice::saveToPng(const string& filename, int* r, int* g, int* b){
   string filename_ppm;
   filename_ppm = filename;
   filename_ppm.erase (filename_ppm.end()-4, filename_ppm.end());
   filename_ppm += ".ppm";
-  saveToPPM(filename_ppm);
+  saveToPPM(filename_ppm, r, g, b);
 
 
-  // rm automatically deletes the ppm-file to save memory (removes test002.ppm)
+  // rm automatically deletes the ppm-file to save memory
   char cmd[160];
   sprintf(cmd,"convert %s %s; rm -f %s",
           filename_ppm.c_str(), filename.c_str(), filename_ppm.c_str());

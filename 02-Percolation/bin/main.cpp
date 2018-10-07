@@ -1,5 +1,5 @@
-#include "Percolation.hpp"
-//#include "Forestfire.hpp"
+#include "percolationlattice.hpp"
+#include "Forestfire.hpp"
 #include <iostream>
 
 
@@ -10,20 +10,22 @@ int main(){
   /*
   Task 1
   */
-  Percolation percolation(100, 0.5);
-  percolation.setLattice(0.5, 1);
-  percolation.saveFigure("test.png");
-  //percolation.calc_different_p();
+  percolationlattice lat(100, 0.5);
+  //lat.setLattice_differentProbabilities();
 
   /*
   Task 2
   */
+  Forestfire forestfire(50, 0.7);
+  //forestfire.BurningMethod(true);
+
+  cout << "Done" << endl;
 
   /*
   Task 3
   */
-  //Forestfire forestfire(20);
-  //forestfire.FireStatistics_different_p(1000);
+  //Forestfire forestfire(5);
+  forestfire.stats_differentProbabilities(1000);
 
 
   return 0;
