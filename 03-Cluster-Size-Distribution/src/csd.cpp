@@ -1,6 +1,6 @@
 /**
   CS-11
-  @file     Percolation.cpp
+  @file     csd.cpp
   @author   Giulia Schneider
   @date     15.05.2018
   *version  1.0
@@ -8,8 +8,7 @@
             according to the occupation probability p
 */
 
-#include "Percolation.hpp"
-#include "latticeview.h"
+#include "percolationlattice.hpp"
 #include "savedata.h"
 #include <iostream>
 #include <iomanip>      // std::setw
@@ -19,66 +18,17 @@
 using namespace std;
 
 
-Percolation::Percolation(int N): N(N), ImageWidth(1000), ImageHeight(1000){
-  lat = new int[N*N] ;
-}
-
-Percolation::Percolation(int N, double p): p(p), N(N), ImageWidth(1000), ImageHeight(1000){
-  lat = new int[N*N] ;
-}
-
-Percolation::~Percolation(){
-  delete[] lat;
+csd::csd(int N, double p): p(p), L(L){
+  lat = new percolationlattice(L, p);
 }
 
 
-void Percolation::createLattice(double p, int marker){
-  /**
-      @brief: Generates a lattice with randomly occupied and unoccupied sites
-              according to the occupation probability p
-      @param p:      occupation probability
-      @param marker: marks the occupied sites with markes
-      @return void
-  */
-  srand(time(0));
-  for (int icounter=0; icounter<N*N; icounter++){
-    z = 1.0*rand()/RAND_MAX;
-    if(z<p){
-      lat[icounter]= (int)(marker);
-    }
-    else{
-      lat[icounter]= (int)(0);
-    }
-  }
+csd::~csd(){
+  delete lat;
 }
 
-void Percolation::saveFigure(char *filename){
-  /**
-      @brief: saves the generated laticce to a png-file
-      @param filename: name of the generated output file
-      @return void
-  */
-  cout << "Printing " << endl;
-  Print_lattice (lat, N, N, ImageWidth, ImageHeight, filename);
-  // In order to save memory you can directly convert the ppm's to any other format like, e.g. png. Use the following code to convert ppm to another format (e.g. png, could be jpg, etc.)
 
-}
-
-void Percolation::calc_different_p(){
-  /**
-      @brief: generates lattices for different occupation probabilites
-              and saves them as images
-      @return void
-  */
-  double p_array[10] = {.1,.2,.3,.4,.5,.6,.7,.8,.9,1.0};
-  for(int i = 0;i<10;i++){
-    createLattice(p_array[i],1);
-    sprintf(filename,"../report/figures/1_task_p%.2f.png",p_array[i]);
-    saveFigure(filename);
-  }
-}
-
-void Percolation::found_newCluster(int &position){
+void csd::found_newCluster(int &position){
   /**
       @brief: part of the Hoshen- Kopelman algorithm; when a new Cluster is found
       @param position:  current lattice position
@@ -89,7 +39,7 @@ void Percolation::found_newCluster(int &position){
   M.push_back(1);
 }
 
-void Percolation::updateM(int k){
+void csd::updateM(int k){
   /**
       @brief: part of the Hoshen- Kopelman algorithm; increases M(k)
       @param k:  current k value
@@ -100,14 +50,15 @@ void Percolation::updateM(int k){
   if(M[k]>Mmax){Mmax = M[k];}
 }
 
-void Percolation::set_k(int position){
+void csd::set_k(int position){
   /**
-      @brief: part of the Hoshen- Kopelman algorithm; sets the k value at the current position
-      @param position:  current lattice position
-      @return void
+  * part of the Hoshen- Kopelman algorithm;
+    sets the k value at the current position
+  * @param position:  current lattice position
   */
+  
   // check if site is occupied
-  if(lat[position]==1){
+  if(lat->getValue(position)==1){
 
     // check if site is part of the boundary
     if(position == 0){ // check if site is upper left corner
@@ -167,24 +118,7 @@ void Percolation::set_k(int position){
   }
 }
 
-void Percolation::printLattice(){
-  /**
-      @brief: prints the lattice to console
-      @return void
-  */
-  for(int i=0;i<(N*N);i++){
-    cout <<  setw(2);
-    if(i%N==N-1){
-      cout << lat[i] << "|" << endl;
-    }
-    else{
-
-    cout <<  lat[i] << "|"<< flush;
-    }
-  }
-}
-
-void Percolation::countClusters(){
+void csd::countClusters(){
   /**
       @brief: counts the cluster of different sizes
       @return void
@@ -195,17 +129,16 @@ void Percolation::countClusters(){
   }
 }
 
-void Percolation::calc_ClusterSizeDistribution(){
+void csd::calcCSD(){
   /**
       @brief: calculates the cluster size distribution and saves it to the vector M
-      @return void
   */
-  createLattice(p,1);
+  lat->setLattice(p,1);
   kmax = 2;
   M.assign(2,0);
   Mmax = 0;
 
-  for(int i=0;i<(N*N);i++){
+  for(int i=0;i<(L*L);i++){
     set_k(i);
   }
 
@@ -213,7 +146,7 @@ void Percolation::calc_ClusterSizeDistribution(){
 
 }
 
-void Percolation::calcCSD_different_p(){
+void csd::calcCSD_different_p(){
   /**
       @brief: calculates the CSD for different p and saves them to a text file
       @return void
