@@ -8,9 +8,9 @@
 
 
 
-void printVector(const vector<int> *data){
+void printVector(const vector<int> &data){
     /* Print data vector to console */
-    copy(data->begin(), data->end(), ostream_iterator<int>(cout, "\n"));
+    copy(data.begin(), data.end(), ostream_iterator<int>(cout, "\n"));
 }
 
 
@@ -26,5 +26,3 @@ void save_to_text(const vector<int> *data, const char* vfilename){
         cout << "Could not create file: " << vfilename << endl;
     }
 }
-
-

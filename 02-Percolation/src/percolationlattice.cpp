@@ -94,7 +94,6 @@ void percolationlattice::setLattice(double p, int marker){
 }
 
 
-
 void percolationlattice::saveFigure(char *filename, int* r, int* g, int* b){
 /**
 * saves the generated laticce to a png-file

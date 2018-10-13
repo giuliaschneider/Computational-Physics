@@ -10,7 +10,7 @@ int main(){
   /*
   Task
   */
-  csd distribution(1000,0.6);
+  csd distribution(10,0.6);
   distribution.calcCSD_different_p();
 
 

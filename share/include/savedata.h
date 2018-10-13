@@ -12,9 +12,7 @@
 using namespace std;
 
 
-
-
-void printVector(const vector<int> *data);
+void printVector(const vector<int> &data);
 
 template<typename T>
 void printVector(const T *data, const int &size);

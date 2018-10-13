@@ -1,6 +1,6 @@
 /**
   CS-11
-  @file     squarelattic.cpp
+  @file     squarelattice.cpp
   @author   Giulia Schneider
   @date     06.10.2018
   *version  1.0
