@@ -3,6 +3,8 @@
 #define CSD
 
 #include<vector>
+#include "percolationlattice.hpp"
+
 
 class csd{
 public:
@@ -15,16 +17,18 @@ public:
   int Mmax;
   std::vector<int> M;
   std::vector<int> nClusters;
+  int eastValue;
+  int northValue;
 public:
-  percolationlattice lat;
+  percolationlattice* lat;
 public:
-  csd(int N, double p);
+  csd(int L, double p);
   ~csd();
   void calcCSD();
   void calcCSD_different_p();
 private:
   void set_k(int position);
-  void found_newCluster(int &position);
+  void found_newCluster(int position);
   void updateM(int k);
   void countClusters();
 };

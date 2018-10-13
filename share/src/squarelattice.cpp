@@ -98,6 +98,25 @@ void squarelattice::getNeighbors(int position){
 }
 
 
+void squarelattice::getEasternNeighbor(int position){
+  if(position%L == 0){ // eastern boundary
+    east = -1;
+  }
+  else{
+    east = position-1;
+  }
+}
+
+void squarelattice::getNorthernNeighbor(int position){
+  if(position < L){ // eastern boundary
+    north = -1;
+  }
+  else{
+    north = position-L;
+  }
+}
+
+
 void squarelattice::getPeriodicNeighbors(Coordinates crd){
   int position = getPosition(crd);
   getNeighbors(position);
@@ -155,9 +174,27 @@ void squarelattice::getNeighboringValues(int position){
 
 }
 
+
+
 void squarelattice::getNeighboringValues(Coordinates crd){
   int position = getPosition(crd);
   getNeighboringValues(position);
+}
+
+
+int squarelattice::getEasternValue(int position){
+  getEasternNeighbor(position);
+
+  if(east==-1){return 0;}
+  else{return sites[east];}
+}
+
+
+int squarelattice::getNorthernValue(int position){
+  getNorthernNeighbor(position);
+
+  if(north==-1){return 0;}
+  else{return sites[north];}
 }
 
 

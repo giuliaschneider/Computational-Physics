@@ -65,6 +65,14 @@ int* percolationlattice::getNeighboringValues(int position){
 }
 
 
+int percolationlattice::getNorthernValue(int position){
+  return lat->getNorthernValue(position);
+}
+
+int percolationlattice::getEasternValue(int position){
+  return lat->getEasternValue(position);
+}
+
 void percolationlattice::setLattice(double p, int marker){
   /**
   * Generates a lattice with randomly occupied and unoccupied sites

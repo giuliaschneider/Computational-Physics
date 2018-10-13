@@ -27,6 +27,8 @@ public:
   int getValue(int position);
   int* getNeighboringValues(int position);
   int* getNeighbors(int position);
+  int getNorthernValue(int position);
+  int getEasternValue(int position);
   void setLattice(double p,int color);
   void saveFigure(char *filename, int* r, int* g, int* b);
   void setLattice_differentProbabilities();

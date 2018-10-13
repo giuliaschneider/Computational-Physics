@@ -36,11 +36,15 @@ public:
   void getNeighbors(int position);
   void getPeriodicNeighbors(Coordinates crd);
   void getPeriodicNeighbors(int position);
+  void getEasternNeighbor(int position);
+  void getNorthernNeighbor(int position);
 
   void getNeighboringValues(int position);
   void getNeighboringValues(Coordinates crd);
   void getPeriodicNeighboringValues(int position);
   void getPeriodicNeighboringValues(Coordinates crd);
+  int getEasternValue(int position);
+  int getNorthernValue(int position);
 
   int getPosition(Coordinates crd);
 
