@@ -26,6 +26,7 @@ public:
   ~csd();
   void calcCSD();
   void calcCSD_different_p();
+  squarelattice* find_largestCluster();
 private:
   void set_k(int position);
   void found_newCluster(int position);

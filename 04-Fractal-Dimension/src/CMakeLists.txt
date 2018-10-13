@@ -1,3 +1,2 @@
-set ( SOURCES Percolation.cpp Fractal.cpp savedata.cpp )
-add_library( Percolation STATIC ${SOURCES} )
-
+set ( SOURCES Fractal.cpp )
+add_library( fractal STATIC ${SOURCES} )

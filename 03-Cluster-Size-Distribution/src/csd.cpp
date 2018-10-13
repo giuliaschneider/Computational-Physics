@@ -115,7 +115,6 @@ void csd::calcCSD(){
   * calculates the cluster size distribution and saves it to the vector M
   */
 
-  cout << "Calculalting CSD " << endl;
   lat->setLattice(p,1);
   kmax = 1;
   M.assign(2,0);
@@ -142,4 +141,44 @@ void csd::calcCSD_different_p(){
     sprintf(filename,"python_scripts/CSD_N%d_p%.2f.txt",L,p);
     save_to_text(&nClusters, filename);
   }
+}
+
+
+
+
+squarelattice* csd::find_largestCluster(){
+  /**
+  * finds the largest cluster
+    sets all its sites to 1 and all other sites to 0
+  */
+
+  calcCSD();
+
+  // get k-values belonging to the biggest cluster and save them in kVec
+  vector<int> kVec;
+
+  // find the k value of the biggest cluster
+  int kMax = distance(M.begin(),max_element(M.begin(), M.end()));
+  kVec.push_back(kMax);
+
+  int ktemp = 0;
+  for(int k=0; k<M.size(); k++){
+    if(M[k]<0){
+      ktemp = k;
+      while(M[ktemp]<0) {ktemp=-M[ktemp];}
+      if(ktemp == kMax){kVec.push_back(k);}
+    }
+  }
+
+  //lat->lat->printLattice();
+
+  #pragma omp parallel for
+  for(int i=0; i<(L*L); i++){
+    if(find(kVec.begin(), kVec.end(), lat->getValue(i)) != kVec.end()){
+      lat->setValue(i,1);
+    }
+    else{lat->setValue(i,0);}
+  }
+  //lat->lat->printLattice();
+  return lat->lat;
 }

@@ -3,19 +3,19 @@
 #define FRACTAL
 
 
+#include "squarelattice.hpp"
+
+
 class Fractal{
 public:
-  const int ImageWidth;
-  const int ImageHeight;
-public:
-  int *lat;
+  squarelattice *lat;
 private:
-    int N;
+    int L;
     char filename[160];
 public:
-  Fractal(int N);
+  Fractal(squarelattice* arr);
   ~Fractal();
-  void setLattice(int* arr);
+  int findOccupiedCenterPosition();
   void SandBox();
   void BoxCountingMethod();
 private:

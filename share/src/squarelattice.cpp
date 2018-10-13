@@ -37,11 +37,17 @@ squarelattice::~squarelattice(){
 }
 
 
+int squarelattice::getLatticeSize(){
+  return L;
+}
 
 int squarelattice::getPosition(Coordinates crd){
   return crd.y*L + crd.x;
 }
 
+void squarelattice::printCoordinates(int position){
+  cout << "x = " << int(position/L) << ", y = " << position%L << endl;
+}
 
 void squarelattice::setValue(int position, int value){
   sites[position] = value;
@@ -97,6 +103,170 @@ void squarelattice::getNeighbors(int position){
   }
 }
 
+
+void squarelattice::getNeighbors(int position, int offset){
+  if(position - L*offset < 0){ // upper boundary
+    north = -1;
+  }
+  else{
+    north = position - L*(offset+1);
+  }
+
+  if(position + L*offset >= (L*L-1)){ // lower boundary
+    south = -1;
+  }
+  else{
+    south = position+L*(offset+1);
+  }
+
+  // eastern boundary
+  int tempEast = position-1-offset;
+  if(int(position/L)!=int((tempEast)/L)){
+    east = -1;
+  }
+  else{
+    east = tempEast;
+  }
+  // western boundary
+  int tempWest = position+1+offset;
+  if(int(position/L)!=int((tempWest)/L)){
+    west = -1;
+  }
+  else{
+    west = tempWest;
+  }
+}
+
+
+void squarelattice::getDiagonalNeighbors(int position){
+  if(position < L){ // upper boundary
+    if(position%L == 0){ // eastern boundary
+      ne = -1;
+      nw = -1;
+      se = -1;
+      sw = position+L+1;
+    }
+    else if(position%L == (L-1)){ //western boundary
+      ne = -1;
+      nw = -1;
+      se = position+L-1;
+      sw = -1;
+    }
+    else{
+      ne = -1;
+      nw = -1;
+      se = position+L-1;
+      sw = position+L+1;
+    }
+  }
+  else if(position >= (L*(L-1))){ //lower boundary
+    if(position%L == 0){ // eastern boundary
+      ne = -1;
+      nw = position-L+1;
+      se = -1;
+      sw = -1;
+    }
+    else if(position%L == (L-1)){ //western boundary
+      ne = position-L-1;
+      nw = -1;
+      se = -1;
+      sw = -1;
+    }
+    else{
+      ne = -1;
+      nw = -1;
+      se = position+L-1;
+      sw = position+L+1;
+    }
+  }
+  else{
+    ne = position-L-1;
+    nw = position-L+1;
+    se = position+L-1;
+    sw = position+L+1;
+  }
+}
+
+
+
+void squarelattice::getDiagonalNeighbors(int position, int offset){
+  int tempEast = position-1-offset;
+  int tempWest = position+1+offset;
+  if(position - L*(offset+1) < 0){ // upper boundary
+    if(int(position/L)!=int((tempEast)/L)){ // eastern boundary
+      ne = -1;
+      nw = -1;
+      se = -1;
+      sw = position+L*(offset+1)+1;
+    }
+    else if(int(position/L)!=int((tempWest)/L)){ //western boundary
+      ne = -1;
+      nw = -1;
+      se = position+L-1;
+      sw = -1;
+    }
+    else{
+      ne = -1;
+      nw = -1;
+      se = position+L-1;
+      sw = position+L+1;
+    }
+  }
+  else if(position + L*offset >= (L*L-1)){ //lower boundary
+    if(int(position/L)!=int((tempEast)/L)){ // eastern boundary
+      ne = -1;
+      nw = position-L+1;
+      se = -1;
+      sw = -1;
+    }
+    else if(int(position/L)!=int((tempEast)/L)){ //western boundary
+      ne = position-L-1;
+      nw = -1;
+      se = -1;
+      sw = -1;
+    }
+    else{
+      ne = -1;
+      nw = -1;
+      se = position+L-1;
+      sw = position+L+1;
+    }
+  }
+  else{
+    ne = position-L-1;
+    nw = position-L+1;
+    se = position+L-1;
+    sw = position+L+1;
+  }
+}
+
+int* squarelattice::getNeigboringPositions(int position){
+  getNeighbors(position);
+  getDiagonalNeighbors(position);
+  neighborsPositions[0] = north;
+  neighborsPositions[1] = south;
+  neighborsPositions[2] = east;
+  neighborsPositions[3] = west;
+  neighborsPositions[4] = ne;
+  neighborsPositions[5] = nw;
+  neighborsPositions[6] = se;
+  neighborsPositions[7] = sw;
+  return neighborsPositions;
+}
+
+int* squarelattice::getNeigboringPositions(int position, int offset){
+  getNeighbors(position, offset);
+  getDiagonalNeighbors(position, offset);
+  neighborsPositions[0] = north;
+  neighborsPositions[1] = south;
+  neighborsPositions[2] = east;
+  neighborsPositions[3] = west;
+  neighborsPositions[4] = ne;
+  neighborsPositions[5] = nw;
+  neighborsPositions[6] = se;
+  neighborsPositions[7] = sw;
+  return neighborsPositions;
+}
 
 void squarelattice::getEasternNeighbor(int position){
   if(position%L == 0){ // eastern boundary
