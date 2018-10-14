@@ -26,3 +26,20 @@ void save_to_text(const vector<int> *data, const char* vfilename){
         cout << "Could not create file: " << vfilename << endl;
     }
 }
+
+
+void save_to_text(const vector<int> &data1, const vector<int> &data2, const char* vfilename){
+    ofstream outFile;
+    outFile.open(vfilename);
+    int size = data1.size();
+
+    if(outFile.is_open()){
+      for(int i = 0; i<size; i++){
+        outFile << data1[i] << "\t" << data2[i] << endl;
+      }
+        outFile.close();
+    }
+    else {
+        cout << "Could not create file: " << vfilename << endl;
+    }
+}

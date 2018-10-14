@@ -32,8 +32,6 @@ Fractal::~Fractal(){
 }
 
 
-
-
 int Fractal::findOccupiedCenterPosition(){
   /**
   * Finds a occupied site close to the center of the system
@@ -49,9 +47,7 @@ int Fractal::findOccupiedCenterPosition(){
     center = floor(L*L/2)-L/2;
   }
 
-  cout << "Center = " << center << endl;
-
-
+  // Find occupied center
   if(lat->getValue(center)==1){
     return center;
   }
@@ -63,11 +59,9 @@ int Fractal::findOccupiedCenterPosition(){
 
     while(!found){
       neighboringPositions = lat->getNeigboringPositions(center, offset);
-      printVector(neighboringPositions,8);
       for(int j=0; j<8; j++){
         if(neighboringPositions[j]>0){
           if(lat->getValue(neighboringPositions[j])==1){
-            cout << neighboringPositions[j] << " value = " << lat->getValue(neighboringPositions[j]) << endl;
             found = true;
             index = j;
             break;
@@ -76,7 +70,6 @@ int Fractal::findOccupiedCenterPosition(){
       }
       offset++;
     }
-    cout << "Neighbor = " << neighboringPositions[index] << endl;
     return neighboringPositions[index];
   }
 }
@@ -89,21 +82,21 @@ void Fractal::SandBox(){
 
   // initialze temporary variables
   vector<int> M;
+  vector<int> vecR;
 
   int center = findOccupiedCenterPosition();
-  int xCenter = int(center/L);
-  int yCenter = center%L;
   int shift = 0;
   int position = 0;
   int upperleftcorner = 0;
 
-  cout << "x = " << xCenter << ", y = " << yCenter << endl;
-  int Rmax = min(min(xCenter*2, (L-xCenter-1)*2), min(yCenter*2, (L-yCenter-1)*2))+1;
+  // Find maximal Radius centering the occupied center point
+  int xCenter = int(center/L);
+  int yCenter = center%L;
+  int minRx = min(xCenter*2, (L-xCenter-1)*2);
+  int minRy = min(yCenter*2, (L-yCenter-1)*2);
+  int Rmax = min(minRx, minRy) +1;
 
-  cout << "Rmax = " << Rmax << endl;
-
-  for(int R=3;R<Rmax+1;R+=2){
-    //cout << "R = " << R << endl;
+  for(int R=3;R<=Rmax;R+=2){
     // calculate the upperleft corner of the sandbox of size R
     shift = (R-1)/2;
     upperleftcorner = center-shift-shift*L;
@@ -113,25 +106,30 @@ void Fractal::SandBox(){
       if(i==0){position = upperleftcorner;}
       else if(i%R==0){position += L-R+1;}
       else {position++;}
-      //cout << "Position = " << position << endl;
       if(lat->getValue(position)==1){nCount++;}
     }
     M.push_back(nCount);
-    //cout << "M(r) = " << M[R-3] << endl;
+    vecR.push_back(R);
   }
-  printVector(M);
 
-  sprintf(filename,"python_scripts/SandBox_MR_N%d.txt",L);
-  save_to_text(&M,filename);
-  cout << "Fertig Sandbox" << endl;
+  if(Rmax<L){
+    int nCount = 0;
+    for(int i=0;i<L*L;i++){
+      if(lat->getValue(i)==1){nCount++;}
+    }
+    M.push_back(nCount);
+    vecR.push_back(L);
+  }
+
+  sprintf(filename,"results/SandBox_MR_N%d.txt",L);
+  save_to_text(vecR, M, filename);
 
 }
 
 
 void Fractal::BoxCountingMethod(){
   /**
-      @brief: Implementation of the Box counting algorithm to calculate the fractal dimension
-      @return void
+  * Implementation of the Box counting algorithm to calculate the fractal dimension
   */
   // initialze temporary variables
   vector<int> NL;
@@ -139,18 +137,16 @@ void Fractal::BoxCountingMethod(){
   int position = 0;
 
 
-  for(int eps=1;eps<L+1;eps++){
-    //cout << "eps = " << eps << endl;
+  for(int eps=1;eps<=L;eps++){
     int nBoxes = (1+(L-1)/eps); // round up L/eps
-    //  cout << "nBoxes = " << nBoxes << endl;
 
     //loop through all boxes
     for(int i=0;i<nBoxes*nBoxes;i++){
-      //cout << " Box Nr " << i << endl;
       int gridrow = i/nBoxes*eps;
       int upperleftcorner = gridrow*L+i%nBoxes*eps;
 
-      if((L%eps!=0) and (i%nBoxes*eps>(L/eps)*eps-1) and (i/nBoxes*eps>(L/eps)*eps-1)) { // uneven size of boxes in lattices
+      // uneven size of boxes in lattices
+      if((L%eps!=0) and (i%nBoxes*eps>(L/eps)*eps-1) and (i/nBoxes*eps>(L/eps)*eps-1)) {
         // check if box is at lower right corner
         int Lboundary = L%eps;
         for(int j=0;j<Lboundary*Lboundary;j++){
@@ -166,7 +162,6 @@ void Fractal::BoxCountingMethod(){
       // check if box is on lower boundary
       else if( (L%eps!=0) and (i/nBoxes*eps>(L/eps)*eps-1)){
         //cout << "lower boundary " << endl;
-
         int Lboundary = L%eps;
         for(int j=0;j<Lboundary*eps;j++){
           int cellrow = j/eps;
@@ -205,8 +200,6 @@ void Fractal::BoxCountingMethod(){
       }
     }
   }
-  sprintf(filename,"python_scripts/BoxCounting_NR_N%d.txt",L);
+  sprintf(filename,"results/BoxCounting_NR_N%d.txt",L);
   save_to_text(&NL,filename);
-  cout << "Fertig BoxCounting" << endl;
-
 }
