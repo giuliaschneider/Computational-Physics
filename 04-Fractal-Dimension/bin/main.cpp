@@ -4,7 +4,6 @@
 #include "squarelattice.hpp"
 
 #include <iostream>
-#include <iomanip>      // std::setw
 #include <ctime>
 
 
@@ -13,22 +12,19 @@ using namespace std;
 int main(){
 
   /*
-  Task 1
+  Task
   */
-
   srand(time(0));
   double p = 0.592746;
-  int N = 5000;
+  int N = 1000;
 
-  csd distribution(N,0.6);
+  csd distribution(N,p);
   squarelattice *plat = distribution.find_largestCluster();
 
   Fractal fractal(plat);
 
   fractal.SandBox();
   fractal.BoxCountingMethod();
-
-
 
 
   return 0;

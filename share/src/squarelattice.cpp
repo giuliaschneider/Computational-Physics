@@ -2,7 +2,7 @@
   CS-11
   @file     squarelattice.cpp
   @author   Giulia Schneider
-  @date     06.10.2018
+  @date     21.10.2018
   *version  1.0
   @brief    Defines a square lattice of size L*L
 */

@@ -2,7 +2,7 @@
   CS-11
   @file     Fractal.cpp
   @author   Giulia Schneider
-  @date     03.05.2018
+  @date     21.10.2018
   *version  1.0
   @brief    Generates a lattice with randomly occupied and unoccupied sites
             according to the occupation probability p
