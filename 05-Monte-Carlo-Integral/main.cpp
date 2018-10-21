@@ -7,29 +7,36 @@
 using namespace std;
 
 
-double mc(int M, int n, int R, int L){
+double mc_spheres(int M, int n, int R, int L){
   /**
-      @brief: calculates the avereage particle distance using monte carlo integration
-      @param: 
-      @return double average particle distance
+  * calculates the average particle distance using monte carlo integration
+  * returns the mean distance averaged over all configurations
+  * @param M: number of configurations
+  * @param n: number of spheres
+  * @param R: sphere radius
+  * @param L: cube size
   */
-
   Spheres inbox(n,R,L);
-
   double I = 0;
 
+  // iterate over configurations
   for(int i=0;i<M;i++){
-    //cout << "k = " << i << endl;
     inbox.createSpheres();
     double dmean = inbox.get_dmean();
-    I = I + dmean;
+    I += dmean;
   }
-  I = I/M;
-  return I;
-  //cout << "I = " << I << endl;
+  return I/M;
 }
 
 void run_mcexperiments(int n, int R, int L){
+  /**
+  * calculates the average particle distance using monte carlo integration
+  * returns the mean distance averaged over all configurations
+  * @param M: number of configurations
+  * @param n: number of spheres
+  * @param R: sphere radius
+  * @param L: cube size
+  */
   cout << "M  \tdmean" << endl;
   int Mmax = 300000;
   int Nmax = 1000;
