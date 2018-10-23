@@ -26,7 +26,8 @@ void save_to_text(const vector<int> &data1, const vector<int> &data2, const char
 
 template<typename T>
 void save_to_text(const T *data, const int size, const char* vfilename);
-
+template<typename T, typename U>
+void save_to_text(const T *data1, const U *data2, const int size, const char* vfilename);
 
 #include "savedata.tpp"
 #endif

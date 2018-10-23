@@ -1,3 +1,3 @@
-set ( SOURCES Spheres.cpp savedata.cpp )
+set ( SOURCES Spheres.cpp )
 
 add_library( Spheres STATIC ${SOURCES} )

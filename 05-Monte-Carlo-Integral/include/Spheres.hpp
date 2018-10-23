@@ -23,6 +23,8 @@ public:
   void calc_dmean();
   double get_dmean();
 private:
+  void getDistances();
+  int calcDistance(int x, int y, int z, int positon);
 
 };
 
