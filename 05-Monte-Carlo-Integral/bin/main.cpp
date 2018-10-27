@@ -40,7 +40,7 @@ void vary_m(int n, int R, int L){
 
   // initalize variables
   int Mmax = 100000;
-  int nConfigurations = 10;
+  int nConfigurations = 1000;
   int mStep = int(Mmax/nConfigurations);
   int m = 0;
   int* M = new int[nConfigurations];
@@ -88,14 +88,7 @@ int main(){
   */
 
   srand(time( NULL ));
-  int R = 1;
-  int L = 10;
-  int n = 10;
-  int m = 2000;
 
-  double mean = 0;
-  //mean = mc_spheres(mean, m, n, R, L);
-  //vary_m(n, R, L);
   vary_n();
 
   return 0;

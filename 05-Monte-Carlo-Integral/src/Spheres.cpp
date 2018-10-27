@@ -2,7 +2,7 @@
   CS-11
   @file     Spheres.cpp
   @author   Giulia Schneider
-  @date     21.10.2018
+  @date     27.10.2018
   *version  1.0
   @brief    Generates n non-overelapping spheres with radius R
             randomly distributed within a cube of volume LxLxL
@@ -11,14 +11,10 @@
 #include "Spheres.hpp"
 #include "savedata.h"
 #include <iostream>
-//#include <stdio.h>
-//#include <algorithm>
-//#include <cmath>
 #include <math.h>
 
 
 using namespace std;
-
 
 
 
