@@ -1,7 +1,7 @@
-
 #ifndef ISING
 #define ISING
 
+#include "squarelattice.hpp"
 
 class Ising{
 private:
@@ -9,31 +9,24 @@ private:
   int N;
   double kbT;
   double J;
-  int* spins;
+  squarelattice* lat;
   int E;
   int M;
-  int north;
-  int south;
-  int east;
-  int west;
   int nSweeps;
+public:
+  char filename[160];
+  int* vecE;
+  int* vecM;
 private:
   void initializeLattice();
-  void getNeighbors(int position);
+  int calcH(int position);
   void calcEM();
   void systemSweep();
   void singleFlip(int position);
   void simulation();
 public:
-  char filename[160];
-  int* vecE;
-  int* vecM;
-public:
   Ising(int L, double T, double J, int nSweeps);
   ~Ising();
-
-
 };
-
 
 #endif

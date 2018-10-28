@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Ising.hpp"
-#include "savedata.hpp"
+#include "savedata.h"
 
 
 
@@ -9,7 +9,7 @@ using namespace std;
 
 
 int main(){
-  int L  = 1024;
+  int L  = 100;
   double T = 0.2;
   double J = 1.0;
   int nSweeps = 1000;

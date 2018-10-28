@@ -69,5 +69,24 @@ void save_to_text(const T *data1, const U *data2, const int size, const char* vf
   }
 }
 
+template<typename T, typename U>
+void save_to_text(const char* header1, const char* header2,
+const T *data1, const U *data2, const int size, const char* vfilename){
+  ofstream outFile;
+  outFile.open(vfilename);
+
+  if(outFile.is_open()){
+    outFile.setf(ios::fixed, ios::floatfield);
+    outFile.precision(5);
+    outFile << header1 << ", " << header2 << endl;
+    for(int i=0; i < size; i++){
+      outFile << data1[i] << ", " << data2[i] << endl;
+    }
+    outFile.close();
+  }
+  else {
+    cout << "Could not create file: " << vfilename << endl;
+  }
+}
 
 #endif

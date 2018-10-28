@@ -9,23 +9,24 @@
 */
 
 #include "Ising.hpp"
-#include "savedata.hpp"
-#include <iostream>
-#include <iomanip>      // std::setw
-#include <stdio.h>
-#include <algorithm>
-#include <cmath>
-#include <math.h>
+#include "savedata.h"
+#include "squarelattice.hpp"
 
+#include <iostream>
+//#include <iomanip>      // std::setw
+//#include <stdio.h>
+//#include <algorithm>
+//#include <cmath>
+#include <math.h>
 
 using namespace std;
 
 
 Ising::Ising(int L, double kbT, double J, int nSweeps):
-L(L), kbT(kbT), J(J), nSweeps(nSweeps){
+  L(L), kbT(kbT), J(J), nSweeps(nSweeps){
   N = L*L;
-  J = 1.0;
-  spins = new int[N];
+  lat = new squarelattice(L);
+
   initializeLattice();
   calcEM();
   //save::printLattice(spins, L);
@@ -34,7 +35,7 @@ L(L), kbT(kbT), J(J), nSweeps(nSweeps){
 
 
 Ising::~Ising(){
-  delete[] spins;
+  delete lat;
 }
 
 
@@ -42,50 +43,35 @@ void Ising::initializeLattice(){
   for (int i=0; i<N; i++){
     int sigma = rand()%2;
     if(sigma == 0){
-      spins[i] = -1;
+      lat->setValue(i, -1);
     }
     else {
-      spins[i] = 1;
+      lat->setValue(i, 1);
     }
   }
 }
 
 
-void Ising::getNeighbors(int position){
-  if(position < L){ // upper boundary
-    north = (L*(L-1)) + position;
-    south = position+L;
-  }
-  else if(position >= (L*(L-1))){ //lower boundary
-    north = position-L;
-    south = position%L;
-  }
-  else { // not on boundary
-    north = position-L;
-    south = position+L;
-  }
+int Ising::calcH(int position){
+  int* neighboringValues;
+  neighboringValues = lat->returnNNeighboringValues(position);
+  int h = 0;
 
-  if(position%L == 0){ // eastern boundary
-    east = position + (L-1);
-    west = position+1;
+  for(int i=0; i<4; i++){
+    h += neighboringValues[i];
   }
-  else if(position%L == (L-1)){ //western boundary
-    east = position-1;
-    west = position - (L-1);
-  }
-  else { // not on boundary
-    east = position-1;
-    west = position+1;
-  }
+  return h;
 }
+
 
 void Ising::calcEM(){
   E = 0;
   M = 0;
-  for (int i=0; i<N; i++){
-    getNeighbors(i);
-    E += -J*spins[i]*(spins[north]+spins[south]+spins[east]+spins[west]);
-    M += spins[i];
+  for(int i=0; i<N; i++){
+    int h = calcH(i);
+    int sigma = lat->getValue(i);
+    E += -J*sigma*h;
+    M += sigma;
   }
 }
 
@@ -98,23 +84,22 @@ void Ising::systemSweep(){
 
 
 void Ising::singleFlip(int position){
-  getNeighbors(position);
-  int sigma = spins[position];
-  int h = spins[north]+spins[south]+spins[east]+spins[west];
+  int sigma = lat->getValue(position);
+  int h = calcH(position);
   double dE = 2*J*sigma*h;
 
   if(dE<0){
-    spins[position] = -spins[position];
+    lat->setValue(position, -sigma);
     E += dE;
-    M += -2*spins[position];
+    M += -2*sigma;
   }
   else{
     double a = double(double(rand())/RAND_MAX);
     double thresh = min(1.0, exp(-dE/(kbT)));
     if(a<thresh){
-      spins[position] = -spins[position];
+      lat->setValue(position, -sigma);
       E += dE;
-      M += -2*spins[position];
+      M += -2*sigma;
     }
   }
 }
@@ -139,18 +124,10 @@ void Ising::simulation(){
       vecE[m] = E;
       vecM[m] = M;
     }
-
-
     cout << "E, M" << endl;
-    sprintf(filename,"python_scripts/n%d/ising_n%d_%2.4f.txt",L,L,kbT);
-    save::save_to_text(header1, header2, vecE, vecM, nSweeps, filename);
-
+    sprintf(filename,"results/ising_n%d_%2.4f.txt",L,kbT);
+    save_to_text(header1, header2, vecE, vecM, nSweeps, filename);
   }
-
-
-
-
   delete[] vecE;
   delete[] vecM;
-
 }

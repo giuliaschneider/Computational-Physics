@@ -1,3 +1,3 @@
-set ( SOURCES Ising.cpp savedata.cpp )
+set ( SOURCES Ising.cpp )
 
 add_library( Ising STATIC ${SOURCES} )

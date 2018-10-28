@@ -19,7 +19,6 @@ void printVector(const T *data, const int &size);
 template<typename T>
 void printVector(const T *data, const T *data2, const int &size);
 
-
 void save_to_text(const vector<int> *data, const char* vfilename);
 void save_to_text(const vector<int> &data1, const vector<int> &data2, const char* vfilename);
 
@@ -28,6 +27,9 @@ template<typename T>
 void save_to_text(const T *data, const int size, const char* vfilename);
 template<typename T, typename U>
 void save_to_text(const T *data1, const U *data2, const int size, const char* vfilename);
+template<typename T, typename U>
+void save_to_text(const char* header1, const char* header2,
+  const T *data1, const U *data2, const int size, const char* vfilename);
 
 #include "savedata.tpp"
 #endif

@@ -26,8 +26,6 @@ using namespace std;
 
 squarelattice::squarelattice(int L):
 L(L){
-  cout << "Construction Square" << endl;
-
   N = L*L;
   sites = new int[N]();
 }
@@ -58,7 +56,6 @@ void squarelattice::setValue(Coordinates crd, int value){
   sites[position] = value;
 }
 
-
 int squarelattice::getValue(int position){
   return sites[position];
 }
@@ -73,7 +70,6 @@ void squarelattice::getNeighbors(Coordinates crd){
   int position = getPosition(crd);
   getNeighbors(position);
 }
-
 
 void squarelattice::getNeighbors(int position){
   if(position < L){ // upper boundary
@@ -240,7 +236,7 @@ void squarelattice::getDiagonalNeighbors(int position, int offset){
   }
 }
 
-int* squarelattice::getNeigboringPositions(int position){
+int* squarelattice::get8NeigboringPositions(int position){
   getNeighbors(position);
   getDiagonalNeighbors(position);
   neighborsPositions[0] = north;
@@ -254,7 +250,7 @@ int* squarelattice::getNeigboringPositions(int position){
   return neighborsPositions;
 }
 
-int* squarelattice::getNeigboringPositions(int position, int offset){
+int* squarelattice::get8NeigboringPositions(int position, int offset){
   getNeighbors(position, offset);
   getDiagonalNeighbors(position, offset);
   neighborsPositions[0] = north;
@@ -344,7 +340,15 @@ void squarelattice::getNeighboringValues(int position){
 
 }
 
+int* squarelattice::returnNNeighboringValues(int position){
+  getNeighboringValues(position);
+  return neighboringValues;
+}
 
+int* squarelattice::returnNNeighboringValues(Coordinates crd){
+  getNeighboringValues(crd);
+  return neighboringValues;
+}
 
 void squarelattice::getNeighboringValues(Coordinates crd){
   int position = getPosition(crd);

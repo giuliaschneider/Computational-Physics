@@ -51,11 +51,14 @@ public:
   void getDiagonalNeighbors(int position);
   void getDiagonalNeighbors(int position, int offset);
 
-  int* getNeigboringPositions(int position);
-  int* getNeigboringPositions(int position, int offset);
+  int* get8NeigboringPositions(int position);
+  int* get8NeigboringPositions(int position, int offset);
 
   void getNeighboringValues(int position);
   void getNeighboringValues(Coordinates crd);
+  int* returnNNeighboringValues(int position);
+  int* returnNNeighboringValues(Coordinates crd);
+
   void getPeriodicNeighboringValues(int position);
   void getPeriodicNeighboringValues(Coordinates crd);
   int getEasternValue(int position);
@@ -63,7 +66,7 @@ public:
 
   int getPosition(Coordinates crd);
   void printCoordinates(int position);
-  
+
   void printLattice();
   void printVector();
   void saveLattice(const char* vfilename);
