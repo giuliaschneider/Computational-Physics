@@ -393,6 +393,16 @@ void squarelattice::getPeriodicNeighboringValues(Coordinates crd){
 }
 
 
+int* squarelattice::returnNPeriodicNeighboringValues(int position){
+  getPeriodicNeighboringValues(position);
+  return neighboringValues;
+}
+
+int* squarelattice::returnNPeriodicNeighboringValues(Coordinates crd){
+  getPeriodicNeighboringValues(crd);
+  return neighboringValues;
+}
+
 void squarelattice::printLattice(){
   cout << "Printing" << endl;
   for(int i=0;i<(N);i++){

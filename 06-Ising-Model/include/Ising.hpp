@@ -10,12 +10,12 @@ private:
   double kbT;
   double J;
   squarelattice* lat;
-  int E;
+  double E;
   int M;
   int nSweeps;
 public:
   char filename[160];
-  int* vecE;
+  double* vecE;
   int* vecM;
 private:
   void initializeLattice();
@@ -23,10 +23,12 @@ private:
   void calcEM();
   void systemSweep();
   void singleFlip(int position);
-  void simulation();
+
 public:
   Ising(int L, double T, double J, int nSweeps);
   ~Ising();
+  void systemRelaxation();
+  void averageM();
 };
 
 #endif

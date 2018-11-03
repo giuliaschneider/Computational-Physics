@@ -61,6 +61,9 @@ public:
 
   void getPeriodicNeighboringValues(int position);
   void getPeriodicNeighboringValues(Coordinates crd);
+  int* returnNPeriodicNeighboringValues(int position);
+  int* returnNPeriodicNeighboringValues(Coordinates crd);
+  
   int getEasternValue(int position);
   int getNorthernValue(int position);
 
