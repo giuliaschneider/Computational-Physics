@@ -43,6 +43,9 @@ Randomwalk::~Randomwalk(){
 
 
 void Randomwalk::setStartingPosition(){
+  /**
+  * Initializes the starting position
+  */
   startingPosition.x = 0;
   startingPosition.y = 0;
   startingPosition.z = 0;
@@ -50,42 +53,79 @@ void Randomwalk::setStartingPosition(){
 
 
 void Randomwalk::initializeParticle(){
+  /**
+  * Initializes the particle, sets its position to the staring position
+  */
   currentPosition.x = startingPosition.x;
   currentPosition.y = startingPosition.y;
   currentPosition.z = startingPosition.z;
 }
 
 
-void Randomwalk::randomStep(){
+void Randomwalk::randomStep2D(){
+  /**
+  * Performs a random step in 2D
+  */
+  double theta = (2 * M_PI * rand()) / RAND_MAX;
+  currentPosition.x = currentPosition.x + stepSize*cos(theta);
+  currentPosition.y = currentPosition.y + stepSize*sin(theta);
+  currentPosition.z = currentPosition.z;
+}
 
-  if(d2){
-    double theta = (2 * M_PI * rand()) / RAND_MAX;
-    currentPosition.x = currentPosition.x + stepSize*cos(theta);
-    currentPosition.y = currentPosition.y + stepSize*sin(theta);
-    currentPosition.z = currentPosition.z;
-  }
-  else{
-    double theta = (2 * M_PI * rand()) / RAND_MAX;
-    double phi = (M_PI * rand()) / RAND_MAX;
-    //cout << "Theta" << theta << endl;
+void Randomwalk::randomStep3D(){
+  /**
+  * Performs a random step in 3D
+  */
+  double theta = (2 * M_PI * rand()) / RAND_MAX;
+  double phi = (M_PI * rand()) / RAND_MAX;
 
-    currentPosition.x = currentPosition.x + stepSize*cos(theta)*sin(phi);
-    currentPosition.y = currentPosition.y + stepSize*sin(theta)*sin(phi);
-    currentPosition.z = currentPosition.z + stepSize*cos(phi);
+  currentPosition.x = currentPosition.x + stepSize*cos(theta)*sin(phi);
+  currentPosition.y = currentPosition.y + stepSize*sin(theta)*sin(phi);
+  currentPosition.z = currentPosition.z + stepSize*cos(phi);
+}
+
+void Randomwalk::randomwalk2D(int nSteps){
+  /**
+  * Performs a random walk with nSteps in 2D space
+  */
+  initializeParticle();
+
+  for(int i=0; i<nSteps; i++){
+    randomStep2D();
   }
-  //cout <<  "x = " << currentPosition.x << ", y = " << currentPosition.y << endl;
+  return calcEndDistance();
+}
+
+void Randomwalk::randomwalk3D(int nSteps){
+  /**
+  * Performs a random walk with nSteps in 2D space
+  * @param nSteps: number of steps
+  */
+  initializeParticle();
+
+  for(int i=0; i<NnSteps; i++){
+    randomStep3D();
+  }
+  return calcEndDistance();
 }
 
 
+void calcDistance(Coordinates newPosition, int pos){
+  double xDist = pow(newPosition.x-positions[pos].x,2);
+  double yDist = pow(newPosition.y-positions[pos].y,2);
+  double zDist = pow(newPosition.z-positions[pos].z,2);
+  double distance = pow(xDist+yDist+zDist,0.5);
+  return distance;
+}
 
-void Randomwalk::selfAvoidingRandomStep(int n){
-
-  //cout << "N = " << n << endl;
-  //cout << "Step size = " << stepSize << endl;
-  //cout << "Current position: " <<  "x = " << currentPosition.x << ", y = " << currentPosition.y << endl;
-
+void Randomwalk::selfAvoidingRandomStep3D(int n){
+  /**
+  * Performs a random step, such that the particle doesn't overlap with
+    previous particles
+  * @param n: nth particle
+  */
   if(n<=1){
-    randomStep();
+    randomStep3D();
   }
   else{
     bool overlap = true;
@@ -99,8 +139,8 @@ void Randomwalk::selfAvoidingRandomStep(int n){
     while(overlap){
       overlap = false;
 
-      theta = (2 * M_PI * rand()) / RAND_MAX;
-      phi = (M_PI * rand()) / RAND_MAX;
+      theta = double((2.0 * M_PI * rand()) / RAND_MAX);
+      phi = double((M_PI * rand()) / RAND_MAX);
       newPosition.x = currentPosition.x + stepSize*cos(theta)*sin(phi);
       newPosition.y = currentPosition.y + stepSize*sin(theta)*sin(phi);
       newPosition.z = currentPosition.z + stepSize*cos(phi);
@@ -109,8 +149,7 @@ void Randomwalk::selfAvoidingRandomStep(int n){
 
       for(int pos=startingPoint; pos<n; pos++){
         //cout << "Pos = " << pos << endl;
-        double distance = pow(pow(newPosition.x-positions[pos].x,2)+
-            pow(newPosition.y-positions[pos].y,2)+pow(newPosition.z-positions[pos].z,2),0.5);
+        double distance = calcDistance(newPosition, pos)
         if(distance<stepSize){
           overlap = true;
           break;
@@ -133,19 +172,15 @@ double Randomwalk::calcEndDistance(){
 }
 
 
-double Randomwalk::walk(int N){
+double Randomwalk::selfAvoidingRandomWalk3D(int nSteps){
+  /**
+  * Performs a self avoiding random walk with nSteps in 2D space
+  * @param nSteps: number of steps
+  */
   initializeParticle();
-
-  if(not saw){
-    for(int i=1; i<N+1; i++){
-      randomStep();
-    }
-  }
-  else{
-    positions[0] = startingPosition;
-    for(int i=1; i<N+1; i++){
-      selfAvoidingRandomStep(i);
-    }
+  positions[0] = startingPosition;
+  for(int i=1; i<nSteps+1; i++){
+    selfAvoidingRandomStep(i);
   }
   return calcEndDistance();
 }
