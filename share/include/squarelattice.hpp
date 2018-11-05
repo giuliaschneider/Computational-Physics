@@ -14,9 +14,12 @@ class squarelattice{
 private:
   int L;
   int N;
+  int ImageWidth;
+  int ImageHeight;
 
 public:
   int* sites;
+  int* newSites;
   int north;
   int south;
   int east;
@@ -63,7 +66,7 @@ public:
   void getPeriodicNeighboringValues(Coordinates crd);
   int* returnNPeriodicNeighboringValues(int position);
   int* returnNPeriodicNeighboringValues(Coordinates crd);
-  
+
   int getEasternValue(int position);
   int getNorthernValue(int position);
 

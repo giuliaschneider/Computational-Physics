@@ -1,24 +1,18 @@
-#include <iostream>
 #include "dla.hpp"
-#include "savedata.hpp"
+#include <iostream>
 
 
 
 using namespace std;
 
 
-
 int main(){
 
   srand(time( NULL ));
-
-  int n  = 100000;
+  int n  = 1000000;
 
   dla randomwalk(n);
-
-  //cout << "Done" << endl;
-
-
+  randomwalk.dlaSimulation();
 
   return 0;
 }

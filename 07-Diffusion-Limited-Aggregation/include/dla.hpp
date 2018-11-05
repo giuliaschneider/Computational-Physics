@@ -1,13 +1,10 @@
-
 #ifndef DLA
 #define DLA
 
 #include "squarelattice.hpp"
 
 
-
 enum StepDirection	{ N, E, S, W };	// compass points
-
 
 
 class dla{
@@ -16,6 +13,8 @@ private:
   int L;
   int N;
   squarelattice *lattice;
+  squarelattice *croppedLattice;
+  bool croppedLat;
   Coordinates currentParticle;
   int time;
   Coordinates seedPos;
@@ -32,19 +31,19 @@ public:
 public:
   dla(int nParticles);
   ~dla();
+  void dlaSimulation();
+  void saveSimulation();
 
 private:
   void setSeed();
   void initializeParticle();
   void randomStep();
-  void dlaSimulation();
   double calcRadius();
   void calcMinMaxRadius();
   void checkMaxRadius();
-  bool checkNeighboringSites();
   void checkAttached();
-
-
+  void attachParticle();
+  void cropLattice();
 };
 
 

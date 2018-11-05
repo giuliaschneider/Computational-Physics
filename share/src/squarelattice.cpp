@@ -16,8 +16,7 @@
 #include <cstdlib>
 
 
-#define ImageWidth 1000  //image width
-#define ImageHeight 1000 //image height
+
 
 
 
@@ -26,6 +25,8 @@ using namespace std;
 
 squarelattice::squarelattice(int L):
 L(L){
+  ImageWidth = L;  //image width
+  ImageHeight = L; //image height
   N = L*L;
   sites = new int[N]();
 }
@@ -441,7 +442,6 @@ void squarelattice::saveLattice(const char* vfilename){
 }
 
 
-
 void squarelattice::saveToPPM(const string& vfilename,  int* r, int* g, int* b){
   int  i, j, k, l;
   int vwidth = ImageWidth;
@@ -474,6 +474,7 @@ void squarelattice::saveToPng(const string& filename, int* r, int* g, int* b){
   filename_ppm.erase (filename_ppm.end()-4, filename_ppm.end());
   filename_ppm += ".ppm";
   saveToPPM(filename_ppm, r, g, b);
+
 
 
   // rm automatically deletes the ppm-file to save memory
