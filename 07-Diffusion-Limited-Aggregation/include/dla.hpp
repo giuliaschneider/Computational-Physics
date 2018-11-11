@@ -23,6 +23,10 @@ private:
   double maxRadius;
   bool attached;
   bool outsideScoop;
+  int leftmost;
+  int rightmost;
+  int topmost;
+  int bottommost;
 
 
 public:

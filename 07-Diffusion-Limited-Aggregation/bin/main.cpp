@@ -9,7 +9,7 @@ using namespace std;
 int main(){
 
   srand(time( NULL ));
-  int n  = 1000000;
+  int n  = 1000;
 
   dla randomwalk(n);
   randomwalk.dlaSimulation();

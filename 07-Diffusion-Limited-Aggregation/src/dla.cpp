@@ -51,6 +51,10 @@ void dla::setSeed(){
   lattice->setValue(seedPos, time);
   clusterRadius = 0;
   calcMinMaxRadius();
+  topmost = seedPos.y;
+  bottommost = seedPos.y;
+  leftmost = seedPos.x;
+  rightmost = seedPos.x;
 }
 
 
@@ -150,8 +154,11 @@ void dla::attachParticle(){
   if(radius > clusterRadius){
     clusterRadius = radius;
     calcMinMaxRadius();
-
   }
+  topmost = min(currentParticle.y, topmost);
+  bottommost = max(currentParticle.y, bottommost);
+  leftmost = min(currentParticle.x,leftmost);
+  rightmost = max(currentParticle.x, rightmost);
 }
 
 
@@ -170,6 +177,9 @@ void dla::dlaSimulation(){
       checkAttached();
     }
     attachParticle();
+    if(topmost<=0 or bottommost>=L or leftmost<=0 or rightmost>=L){
+      break;
+    }
   }
   cropLattice();
   saveSimulation();
