@@ -1,0 +1,1 @@
+Diffusion limited aggregation models simulate cluster formation by particle diffusion. In each time step, a particle is released at the boundary and attaches to the forming cluster after performing a random walk. In this exercise, a DLA-model was implemented on a square lattice. 
