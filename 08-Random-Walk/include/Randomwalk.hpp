@@ -22,9 +22,10 @@ private:
   Coordinates newPosition;
   int* vecM;
   int* vecN;
-  double* averageR;
+  double* averageR2;
   double* estimatedError;
   Coordinates* positions;
+  bool converged;
 
 public:
   char filename[160];
