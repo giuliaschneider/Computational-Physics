@@ -30,6 +30,10 @@ void save_to_text(const T *data1, const U *data2, const int size, const char* vf
 template<typename T, typename U>
 void save_to_text(const char* header1, const char* header2,
   const T *data1, const U *data2, const int size, const char* vfilename);
+template<typename T, typename U, typename V>
+void save_to_text(const char* header1, const char* header2, const char* header3,
+  const T *data1, const U *data2, const V *data3, const int size, const char* vfilename);
+
 
 #include "savedata.tpp"
 #endif

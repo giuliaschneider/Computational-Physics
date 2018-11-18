@@ -9,34 +9,32 @@
 */
 
 #include "Randomwalk.hpp"
-#include "savedata.hpp"
+#include "savedata.h"
 #include <iostream>
-#include <iomanip>      // std::setw
-#include <stdio.h>
-#include <algorithm>
-#include <cmath>
+#include <cstring>
+//#include <iomanip>      // std::setw
+//#include <stdio.h>
+//#include <algorithm>
+//#include <cmath>
 #include <math.h>
 
 
 using namespace std;
 
 
-Randomwalk::Randomwalk(int nSteps, int M, bool d2, bool saw):
-nSteps(nSteps), M(M), d2(d2), saw(saw){
-  if(saw){
-    positions = new Coordinates[nSteps+1];
-  }
-
+Randomwalk::Randomwalk(int nSteps, int M, char* method):
+nSteps(nSteps), M(M), method(method){
   setStartingPosition();
-
+  if(strcmp(method,"selfAvoidingRandomWalk3D")==0){
+    positions = new Coordinates[nSteps];
+  }
   varyN();
   //varyM();
-
 }
 
 
 Randomwalk::~Randomwalk(){
-  if(saw){
+  if(method == "selfAvoidingRandomWalk3D"){
     delete[] positions;
   }
 }
@@ -61,6 +59,19 @@ void Randomwalk::initializeParticle(){
   currentPosition.z = startingPosition.z;
 }
 
+double Randomwalk::calcEndDistance(){
+  double dist = calcDistance(currentPosition, startingPosition);
+  return dist;
+}
+
+
+double Randomwalk::calcDistance(Coordinates newPosition, Coordinates particlePosition){
+  double xDist = pow(newPosition.x-particlePosition.x,2);
+  double yDist = pow(newPosition.y-particlePosition.y,2);
+  double zDist = pow(newPosition.z-particlePosition.z,2);
+  double distance = pow(xDist+yDist+zDist,0.5);
+  return distance;
+}
 
 void Randomwalk::randomStep2D(){
   /**
@@ -84,7 +95,7 @@ void Randomwalk::randomStep3D(){
   currentPosition.z = currentPosition.z + stepSize*cos(phi);
 }
 
-void Randomwalk::randomwalk2D(int nSteps){
+double Randomwalk::randomwalk2D(int nSteps){
   /**
   * Performs a random walk with nSteps in 2D space
   */
@@ -96,27 +107,19 @@ void Randomwalk::randomwalk2D(int nSteps){
   return calcEndDistance();
 }
 
-void Randomwalk::randomwalk3D(int nSteps){
+double Randomwalk::randomwalk3D(int nSteps){
   /**
   * Performs a random walk with nSteps in 2D space
   * @param nSteps: number of steps
   */
   initializeParticle();
 
-  for(int i=0; i<NnSteps; i++){
+  for(int i=0; i<nSteps; i++){
     randomStep3D();
   }
   return calcEndDistance();
 }
 
-
-void calcDistance(Coordinates newPosition, int pos){
-  double xDist = pow(newPosition.x-positions[pos].x,2);
-  double yDist = pow(newPosition.y-positions[pos].y,2);
-  double zDist = pow(newPosition.z-positions[pos].z,2);
-  double distance = pow(xDist+yDist+zDist,0.5);
-  return distance;
-}
 
 void Randomwalk::selfAvoidingRandomStep3D(int n){
   /**
@@ -132,24 +135,17 @@ void Randomwalk::selfAvoidingRandomStep3D(int n){
     double theta = 0;
     double phi = 0;
     int startingPoint = 0;
-
     startingPoint = max(0, n-20);
-    //cout << "Start " << startingPoint << endl;
 
     while(overlap){
       overlap = false;
-
       theta = double((2.0 * M_PI * rand()) / RAND_MAX);
       phi = double((M_PI * rand()) / RAND_MAX);
       newPosition.x = currentPosition.x + stepSize*cos(theta)*sin(phi);
       newPosition.y = currentPosition.y + stepSize*sin(theta)*sin(phi);
       newPosition.z = currentPosition.z + stepSize*cos(phi);
-      //cout << "n = " <<n << endl;
-      //cout <<  "x = " << newPosition.x << ", y = " << newPosition.y << ", z = " << newPosition.z << endl;
-
       for(int pos=startingPoint; pos<n; pos++){
-        //cout << "Pos = " << pos << endl;
-        double distance = calcDistance(newPosition, pos)
+        double distance = calcDistance(newPosition, positions[pos]);
         if(distance<stepSize){
           overlap = true;
           break;
@@ -158,17 +154,7 @@ void Randomwalk::selfAvoidingRandomStep3D(int n){
     }
     currentPosition = newPosition;
   }
-  //cout << "Current position: " <<  "x = " << currentPosition.x << ", y = " << currentPosition.y << endl;
   positions[n] = currentPosition;
-}
-
-
-
-double Randomwalk::calcEndDistance(){
-  double distX = pow(currentPosition.x-startingPosition.x,2);
-  double distY = pow(currentPosition.y-startingPosition.y,2);
-  double distZ = pow(currentPosition.z-startingPosition.z,2);
-  return distX + distY + distZ;
 }
 
 
@@ -178,56 +164,63 @@ double Randomwalk::selfAvoidingRandomWalk3D(int nSteps){
   * @param nSteps: number of steps
   */
   initializeParticle();
+  positions = new Coordinates[nSteps];
   positions[0] = startingPosition;
+
   for(int i=1; i<nSteps+1; i++){
-    selfAvoidingRandomStep(i);
+    selfAvoidingRandomStep3D(i);
   }
+  delete[] positions;
   return calcEndDistance();
 }
 
 
 void Randomwalk::varyN(){
-
+  /**
+  * Performs a random walk for different number of steps (1 to nSteps)
+    and saves them to a text file
+  */
+  // Initialize variables
   averageR = new double[nSteps];
   estimatedError = new double[nSteps];
   vecN = new int[nSteps];
-
   double sumR = 0;
   double sumR2 = 0;
   double dist = 0;
   double averageR2=0;
-
-
+  // Loop through different number of spheres
   for(int k=1; k<nSteps+1; k++){
+    cout << "N = " << k << endl;
     dist = 0;
     sumR = 0;
     sumR2 = 0;
-
-    cout << "N = " << k << endl;
-
+    // Generate different configurations
     for(int m=1; m<M+1; m++){
-      dist = walk(k);
+      if(strcmp(method,"randomwalk2D")==0){
+        dist = randomwalk2D(k);
+      }
+      else if(strcmp(method,"randomwalk3D")==0){
+        dist = randomwalk3D(k);
+      }
+      else{
+        dist = selfAvoidingRandomWalk3D(k);
+      }
       sumR += dist;
       sumR2 += pow(dist,2);
     }
-
+    // Save results in vector
     vecN[k-1] = k;
     averageR[k-1] = sumR/M;
     averageR2 = sumR2/M;
     estimatedError[k-1] = sqrt(1.0/M*(averageR2-pow(averageR[M],2)));
   }
-
-  if(not saw){
-    sprintf(filename,"python_scripts/varyN_n%d_m%d.txt",nSteps,M);
-  }
-  else{
-    sprintf(filename,"python_scripts/varyN_saw_n%d_m%d.txt",nSteps,M);
-  }
+  // Save results to txt
+  sprintf(filename,"results/varyN_%s_n%d_m%d.txt",method,nSteps,M);
   char header1[2] = "N";
   char header2[3] = "R2";
   char header3[4] = "err";
-  save::save_to_text(header1, header2, header3, vecN, averageR, estimatedError, nSteps, filename);
-
+  save_to_text(header1, header2, header3, vecN, averageR, estimatedError, nSteps, filename);
+  // Delete dynamic arrays
   delete[] averageR;
   delete[] estimatedError;
   delete[] vecN;
@@ -235,35 +228,40 @@ void Randomwalk::varyN(){
 
 
 void Randomwalk::varyM(){
+  /**
+  * Performs a random walk for different number of configurations (1 to M)
+    and saves them to a text file
+  */
+  // Initialize variables
   averageR = new double[M];
   estimatedError = new double[M];
   vecM = new int[M];
-
   double sumR = 0;
   double sumR2 = 0;
   double dist = 0;
   double averageR2=0;
-
-
-
-  cout << "M, R2, err" << endl;
-
+  // Loop through number of configurations
   for(int k=1; k<M+1; k++){
-
     dist = 0;
     sumR = 0;
     sumR2 = 0;
-
     for(int j=1; j<k; j++){
-      dist = walk(nSteps);
+      if(strcmp(method,"randomwalk2D")==0){
+        dist = randomwalk2D(k);
+      }
+      else if(strcmp(method,"randomwalk3D")==0){
+        dist = randomwalk3D(k);
+      }
+      else{
+        dist = selfAvoidingRandomWalk3D(k);
+      }
       sumR += dist;
       sumR2 += pow(dist,2);
     }
-
+    // Save results in vector
     vecM[k-1] = k;
     averageR[k-1] = sumR/k;
     averageR2 = sumR2/k;
-
     estimatedError[k-1] = sqrt(1.0/k*(averageR2-pow(averageR[k],2)));
 
     //cout << "Mean R = " << averageR[k] << endl;
@@ -271,17 +269,15 @@ void Randomwalk::varyM(){
     //cout << "(Mean R)2 = " << pow(averageR[k],2) << endl;
     //cout << "Err = " << estimatedError[k] << endl;
     //cout << k << ", " << averageR[k] << ", " << estimatedError[k] << endl;
-
   }
-
-  sprintf(filename,"python_scripts/varyM_n%d_m%d.txt",nSteps, M);
+  // Save results to txt
+  sprintf(filename,"results/varyM_%s_n%d_m%d.txt",method,nSteps,M);
   char header1[2] = "M";
   char header2[3] = "R2";
   char header3[4] = "err";
-  save::save_to_text(header1, header2, header3, vecM, averageR, estimatedError, M, filename);
-
+  save_to_text(header1, header2, header3, vecM, averageR, estimatedError, M, filename);
+  // Delete dynamic arrays
   delete[] averageR;
   delete[] estimatedError;
   delete[] vecM;
-
 }

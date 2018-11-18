@@ -1,28 +1,21 @@
 cmake_minimum_required (VERSION 2.6)
-project (code)
+project (08-Random-Walk)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-link_directories("/usr/lib64")
-#link_directories("/opt/local/var/macports/sources/rsync.macports.org/macports/release/tarballs/ports/science")
+get_filename_component(SHARE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../share"
+                       ABSOLUTE  "${CMAKE_BINARY_DIR}" )
+MESSAGE("${SHARE_DIR}")
 
-
-set (cmake -DCMAKE_BUILD_TYPE=RELEASE ..)
-
-set(BUILD_SHARED_LIBS true)
-
-#include_directories(${ARMADILLO_INCLUDE_DIRS})
-#set(LIB ${ARMADILLO_LIBRARIES})
+link_directories("/usr/lib")
 
 include_directories( include )
-include_directories( "/home/giu/polybox/Introduction_to_CompPhys/share/include" )
-include_directories( "/home/giu/polybox/Introduction_to_CompPhys/share/src" )
+include_directories( "${SHARE_DIR}/include" )
 
 add_subdirectory( src )
-add_subdirectory( /home/giu/polybox/Introduction_to_CompPhys/share/src /home/giu/polybox/Introduction_to_CompPhys/share/src )
+add_subdirectory( "${SHARE_DIR}/src" "${SHARE_DIR}/src" )
 
-set( LIB ${LIB} randomwalk save )
+set( LIB ${LIB} randomwalk save)
 
-
-
-add_executable( main.out main.cpp )
+add_executable( main.out bin/main.cpp )
 target_link_libraries( main.out ${LIB} )

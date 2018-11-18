@@ -1,6 +1,7 @@
-
 #ifndef RANDOMWALK
 #define RANDOMWALK
+
+#include <string>
 
 
 struct Coordinates{
@@ -14,8 +15,7 @@ class Randomwalk{
 private:
   int nSteps;
   int M;
-  bool d2;
-  bool saw;
+  char* method;
   int stepSize = 1;
   Coordinates startingPosition;
   Coordinates currentPosition;
@@ -30,16 +30,20 @@ public:
   char filename[160];
 
 public:
-  Randomwalk(int nSteps, int M, bool d2 = true, bool saw = false);
+  Randomwalk(int nSteps, int M, char* method);
   ~Randomwalk();
 
 private:
   void setStartingPosition();
   void initializeParticle();
-  void randomStep();
-  void selfAvoidingRandomStep(int n);
   double calcEndDistance();
-  double walk(int N);
+  double calcDistance(Coordinates newPosition, Coordinates particlePosition);
+  void randomStep2D();
+  void randomStep3D();
+  double randomwalk2D(int nSteps);
+  double randomwalk3D(int nSteps);
+  void selfAvoidingRandomStep3D(int n);
+  double selfAvoidingRandomWalk3D(int nSteps);
   void varyN();
   void varyM();
 
