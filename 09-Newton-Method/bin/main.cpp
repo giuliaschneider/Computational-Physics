@@ -33,25 +33,6 @@ arma::mat Df(arma::vec x){
 int main(){
 
   /*
-  Task 0
-
-  arma::vec x;
-  x << 5.2 << 2.7 << arma::endr;
-  cout << x << endl;
-
-  arma::vec res = f(x);
-  cout << res << endl;
-
-  arma::mat DFx = Df(x);
-  cout << "Analytische DF = " << endl;
-  cout << DFx << endl;
-
-  arma::mat DFx2 = comphys::numericalGrad(2,x,f);
-  cout << "Numerisch DF = " << endl;
-  cout << DFx2 << endl;
-  */
-
-  /*
   Task 1
   */
   arma::vec xstar;
@@ -62,10 +43,10 @@ int main(){
   double i = 4.8;
   while(i<5.6){
     x0 << i << i-3 << arma::endr;
-    sprintf(filename,"python_scripts/newton_error_x0_%.2f.txt",i);
+    sprintf(filename,"results/newton_error_x0_%.2f.txt",i);
     comphys::printErrorNewton(xstar,2,x0,f,Df,filename);
-    sprintf(filename,"python_scripts/Secant_error_x0_%.2f.txt",i);
-    comphys::printErrorSecant(xstar,2,x0,f,filename);
+    sprintf(filename,"results/Secant_error_x0_%.2f.txt",i);
+    //comphys::printErrorSecant(xstar,2,x0,f,filename);
     i+=0.05;
   }
 

@@ -8,7 +8,7 @@
 */
 
 #include "Nullstelle.hpp"
-#include "savedata.hpp"
+#include "savedata.h"
 #include <iostream>
 #include <math.h>
 #include <cmath>
@@ -64,13 +64,14 @@ void printErrorNewton(arma::vec xstar, int d, arma::vec x0, arma::vec (*F)(arma:
     @param maxiter: maximum number of iterations (default maxiter = 200)
     @return arma::vec root x if converged, otherwise zero
 */
+  // initialize variables
   arma::vec x = x0;
   int i = 0;
   vector<double> err;
-  err.push_back(norm(x-xstar)) ;
   vector<int> indexes;
-  indexes.push_back(i);
   arma::vec s(d);
+  err.push_back(norm(x-xstar)) ;
+  indexes.push_back(i);
   while((i==0) or ((norm(s)>rtol*norm(x)) and (i<maxiter)) ){
       arma::vec Fx = F(x);
       arma::mat DFx = DF(x);
@@ -82,7 +83,7 @@ void printErrorNewton(arma::vec xstar, int d, arma::vec x0, arma::vec (*F)(arma:
   }
   int *data1 = &indexes[0];
   double *data2 = &err[0];
-  save::save_to_text(data1,data2,i,vfilename);
+  save_to_text(data1,data2,i,vfilename);
   cout << "x0 = " << x0 << endl;
   cout << "xsol = " << x << endl;
 }
@@ -161,7 +162,7 @@ void printErrorSecant(arma::vec xstar, int d, arma::vec x0, arma::vec (*F)(arma:
   }
   int *data1 = &indexes[0];
   double *data2 = &err[0];
-  save::save_to_text(data1,data2,i,vfilename);
+  save_to_text(data1,data2,i,vfilename);
 }
 
 }

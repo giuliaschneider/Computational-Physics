@@ -1,23 +1,31 @@
 cmake_minimum_required (VERSION 2.6)
-project (code)
+project (09-Newton-Method)
 
-link_directories("/usr/lib64")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+get_filename_component(SHARE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../share"
+                       ABSOLUTE  "${CMAKE_BINARY_DIR}" )
+MESSAGE("${SHARE_DIR}")
 
-find_package(Armadillo REQUIRED) 
-
-set (cmake -DCMAKE_BUILD_TYPE=RELEASE ..)
+find_package(Armadillo REQUIRED)
 
 if ( ARMADILLO_FOUND )
   MESSAGE( "DID FIND IT!")
 endif()
 
+
+link_directories("/usr/lib")
+
+include_directories( include )
+include_directories( "${SHARE_DIR}/include" )
+
+
 include_directories(${ARMADILLO_INCLUDE_DIRS})
-set(LIB ${ARMADILLO_LIBRARIES})
+set(LIB ${LIB} ${ARMADILLO_LIBRARIES})
 
 include_directories( include )
 add_subdirectory( src )
 set( LIB ${LIB} Nullstelle )
 
-add_executable( main.out main.cpp )
-target_link_libraries( main.out ${LIB} )
+add_executable( main.out bin/main.cpp )
+target_link_libraries( main.out ${LIB}  ${ARMADILLO_LIBRARIES})
