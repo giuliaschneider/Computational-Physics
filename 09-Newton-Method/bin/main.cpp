@@ -40,13 +40,13 @@ int main(){
   arma::vec x0;
   char filename[160];
 
-  double i = 4.8;
-  while(i<5.6){
+  double i = 4.85;
+  while(i<5.55){
     x0 << i << i-3 << arma::endr;
     sprintf(filename,"results/newton_error_x0_%.2f.txt",i);
     comphys::printErrorNewton(xstar,2,x0,f,Df,filename);
     sprintf(filename,"results/Secant_error_x0_%.2f.txt",i);
-    //comphys::printErrorSecant(xstar,2,x0,f,filename);
+    comphys::printErrorSecant(xstar,2,x0,f,filename);
     i+=0.05;
   }
 

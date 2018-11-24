@@ -8,7 +8,6 @@ get_filename_component(SHARE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../share"
 MESSAGE("${SHARE_DIR}")
 
 find_package(Armadillo REQUIRED)
-
 if ( ARMADILLO_FOUND )
   MESSAGE( "DID FIND IT!")
 endif()
@@ -18,14 +17,13 @@ link_directories("/usr/lib")
 
 include_directories( include )
 include_directories( "${SHARE_DIR}/include" )
-
-
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 set(LIB ${LIB} ${ARMADILLO_LIBRARIES})
 
-include_directories( include )
 add_subdirectory( src )
-set( LIB ${LIB} Nullstelle )
+add_subdirectory( "${SHARE_DIR}/src" "${SHARE_DIR}/src" )
+
+set( LIB ${LIB} Nullstelle save)
 
 add_executable( main.out bin/main.cpp )
 target_link_libraries( main.out ${LIB}  ${ARMADILLO_LIBRARIES})

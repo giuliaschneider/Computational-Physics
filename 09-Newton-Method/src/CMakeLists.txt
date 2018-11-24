@@ -1,4 +1,3 @@
-set ( SOURCES Nullstelle.cpp savedata.cpp )
+set ( SOURCES Nullstelle.cpp )
 
 add_library( Nullstelle STATIC ${SOURCES} )
-

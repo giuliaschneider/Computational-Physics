@@ -2,7 +2,7 @@
   CS-11
   @file     Nullstelle.cpp
   @author   Giulia Schneider
-  @date     26.06.2018
+  @date     24.11.2018
   *version  1.0
   @brief    Implementation of Newton's method and secant method to calculate the root of a function
 */
@@ -55,6 +55,7 @@ arma::vec Newton(int d, arma::vec x0, arma::vec (*F)(arma::vec), arma::mat (*DF)
 void printErrorNewton(arma::vec xstar, int d, arma::vec x0, arma::vec (*F)(arma::vec), arma::mat (*DF)(arma::vec),const char* vfilename,double rtol, int maxiter){
   /**
     @brief: calculates the root of the function F using Newton's method and saves the error at each iteration step to a text file
+    @param xstar: true root of function F(x)
     @param d: dimension of vector x0
     @param x0: arma::vec inital value
     @param F(x): function
@@ -78,7 +79,7 @@ void printErrorNewton(arma::vec xstar, int d, arma::vec x0, arma::vec (*F)(arma:
       s = solve(DFx,Fx);
       x = x-s;
       i++;
-      err.push_back(norm(s));
+      err.push_back(norm(x-xstar));
       indexes.push_back(i);
   }
   int *data1 = &indexes[0];
@@ -111,6 +112,7 @@ arma::mat numericalGrad(int d,  arma::vec x0, arma::vec (*F)(arma::vec), double 
 arma::vec Secant(int d, arma::vec x0, arma::vec (*F)(arma::vec), double eps,double rtol, int maxiter){
   /**
     @brief: calculates the root of the function F using the secant method
+    @param xstar: true root of function F(x)
     @param d: dimension of vector x0
     @param x0: arma::vec inital value
     @param F(x): function
@@ -157,7 +159,7 @@ void printErrorSecant(arma::vec xstar, int d, arma::vec x0, arma::vec (*F)(arma:
       s = solve(DFx,Fx);
       x = x-s;
       i++;
-      err.push_back(norm(s));
+      err.push_back(norm(x-xstar));
       indexes.push_back(i);
   }
   int *data1 = &indexes[0];

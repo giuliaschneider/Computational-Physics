@@ -58,7 +58,7 @@ void save_to_text(const T *data1, const U *data2, const int size, const char* vf
 
   if(outFile.is_open()){
     outFile.setf(ios::fixed, ios::floatfield);
-    outFile.precision(5);
+    outFile.precision(13);
     for(int i=0; i < size; i++){
       outFile << data1[i] << ", " << data2[i] << endl;
     }
@@ -77,7 +77,7 @@ const T *data1, const U *data2, const int size, const char* vfilename){
 
   if(outFile.is_open()){
     outFile.setf(ios::fixed, ios::floatfield);
-    outFile.precision(5);
+    outFile.precision(13);
     outFile << header1 << ", " << header2 << endl;
     for(int i=0; i < size; i++){
       outFile << data1[i] << ", " << data2[i] << endl;
@@ -97,7 +97,7 @@ const T *data1, const U *data2, const V *data3, const int size, const char* vfil
 
   if(outFile.is_open()){
     outFile.setf(ios::fixed, ios::floatfield);
-    outFile.precision(5);
+    outFile.precision(13);
     outFile << header1 << ", " << header2 << ", " << header3 << endl;
     for(int i=0; i < size; i++){
       outFile << data1[i] << ", " << data2[i] << ", " << data3[i] << endl;
