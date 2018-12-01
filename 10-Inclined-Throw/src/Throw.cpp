@@ -28,7 +28,7 @@ Throw::Throw(){
   v0 = 40.0;
   t0 = 0.0;
   tend = 10;
-  n_steps=1000;
+  n_steps=10000;
   i = 0;
 }
 
@@ -56,7 +56,7 @@ void Throw::vary_gamma(){
     @return void
   */
   for(int alpha=5; alpha<90; alpha+=1){
-    for(double j=0.0;j<5.5;j+=0.5){
+    for(double j=0.0;j<5.6;j+=0.5){
       i++;
       gair = j;
       arma::vec y0 = {0,0,v0*cos(alpha*PI/180.0),v0*sin(alpha*PI/180.0)};
