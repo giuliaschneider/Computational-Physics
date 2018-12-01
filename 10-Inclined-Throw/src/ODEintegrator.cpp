@@ -4,11 +4,10 @@
   @author   Giulia Schneider
   @date     03.05.2018
   *version  1.0
-  @brief    ODEintegrator integrates an autonomes first order ODE with n_steps
+  @brief    ODEintegrator integrates an autonom first order ODE with n_steps
 */
 
 #include "ODEintegrator.hpp"
-#include "savedata.hpp"
 #include <iostream>
 #include <math.h>
 #include <cmath>
@@ -64,7 +63,7 @@ void ODEintegrator::integrate(){
     if(y(1)<0){break;}
   }
 
-  cout << output.t() << endl;
+  //cout << output.t() << endl;
   output = output(arma::span(0,d),arma::span(0,i));
   output.save(vfilename,arma::raw_ascii);
 }

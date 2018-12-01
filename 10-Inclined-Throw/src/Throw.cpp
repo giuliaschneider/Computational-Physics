@@ -4,7 +4,8 @@
   @author   Giulia Schneider
   @date     24.06.2018
   *version  1.0
-  @brief    Wraps up the parameters and right hand side function of the inclined throw problem
+  @brief    Wraps up the parameters and right hand side function of the
+            inclined throw problem
 */
 
 #include "Throw.hpp"
@@ -59,7 +60,7 @@ void Throw::vary_gamma(){
       i++;
       gair = j;
       arma::vec y0 = {0,0,v0*cos(alpha*PI/180.0),v0*sin(alpha*PI/180.0)};
-      sprintf(filename,"python_scripts/%d_run_alpha_%i_gamma_%.2f.txt",i,alpha,gair);
+      sprintf(filename,"results/%d_run_alpha_%i_gamma_%.2f.txt",i,alpha,gair);
       auto pF = std::bind(&Throw::F,this,std::placeholders::_1,std::placeholders::_2);
       comphys::rk4 myode(y0,t0,tend,n_steps,pF,filename);
       myode.integrate();
