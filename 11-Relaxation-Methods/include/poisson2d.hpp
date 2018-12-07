@@ -4,7 +4,6 @@
 
 #include <armadillo>
 
-namespace comphys{
 
 class poisson2d{
 private:
@@ -13,17 +12,13 @@ private:
   int n_charges;
   double* x0;
   double* y0;
-  double atol;
-  double dx;
   arma::vec rho;
-  char* method;
 private:
   void set_rho();
 public:
-  poisson2d(int N, int n_charges, double* x0, double* y0, double atol, char* method);
-  ~poisson2d();
+  poisson2d(int N, int n_charges, double* x0, double* y0);
+  arma::vec get_rho();
 };
 
-}
 
 #endif

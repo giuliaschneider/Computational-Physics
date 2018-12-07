@@ -2,35 +2,69 @@
   CS-11
   @file     PDEintegrator.cpp
   @author   Giulia Schneider
-  @date     26.06.2018
+  @date     07.12.2018
   *version  1.0
-  @brief    Generates a
+  @brief    PDEintegrator integrates an elliptic PDE up to tolerance atol
 */
 
 #include "PDEintegrator.hpp"
 #include <iostream>
-#include <math.h>
-#include <cmath>
-#include <vector>
+//#include <math.h>
+//#include <cmath>
+//#include <vector>
 
 
 using namespace std;
 
 
 
-namespace comphys{
-
 PDEintegrator::PDEintegrator(int N, arma::vec b, double atol, string vfilename):
   N(N), b(b), atol(atol),vfilename(vfilename) {
     dx = 1.0/N;
     n_innergrid = N-2;
-    psi.set_size((N-2)*(N-2));
+    psi.set_size( n_innergrid*n_innergrid );
     psi.fill(0.0);
-    cout << "Done... " << endl;
   }
 
 
-double PDEintegrator::update_psi(int position){
+void PDEintegrator::integrate(){
+  /**
+  * Integrates an elliptic PDE up to tolerance atol and save results to text
+  */
+  delta = 100.0;
+  int numit = 0;
+  while(delta >= atol){
+    numit++;
+    step();
+  }
+  cout << "Done after "<< numit << "iterations" << endl;
+  psi.save(vfilename,arma::raw_ascii);
+}
+
+void PDEintegrator::step(){
+/**
+    @brief: virtual function, needs subclass to specify
+    @return void
+*/
+}
+
+
+RelaxationMethods::RelaxationMethods(int N, arma::vec b, double atol, string vfilename):
+  PDEintegrator(N, b, atol, vfilename){}
+
+void RelaxationMethods::step(){
+  /**
+  * Virtual function, needs subclass to specify
+  * Return void
+  */
+  }
+
+double RelaxationMethods::update_psi(int position){
+  /**
+  * Calculates the the new value psi at position
+  * Return new psi
+  */
+
   if(position==0){ //upper-left corner
     return 0.25*(psi(position+1)+psi(position+n_innergrid)) - b(position);
   }
@@ -60,44 +94,40 @@ double PDEintegrator::update_psi(int position){
   }
 }
 
-void PDEintegrator::Jacobi(){
-  cout << "Jacobi method" << endl;
-  arma::vec psi_new((N-2)*(N-2),arma::fill::zeros);
-  double delta = 100.0;
-  int numit = 0;
-  while(delta >= atol){
-    numit++;
-    for(int i=0;i<(N-2)*(N-2);i++){
-      psi_new(i) = update_psi(i);
-    }
-    delta = arma::norm(psi_new-psi)/arma::norm(psi);
-    psi = psi_new;
-    //cout << numit << ".Iteration" << endl;
+Jacobi::Jacobi(int N, arma::vec b, double atol, string vfilename):
+  RelaxationMethods(N, b, atol, vfilename){
+    psi_new.set_size((N-2)*(N-2));
+    psi_new.fill(0.0);
   }
-  psi.save(vfilename,arma::raw_ascii);
+
+void Jacobi::step(){
+  /**
+  Performs one Jacobi relaxation step
+  Return void
+  */
+  for(int i=0;i<(N-2)*(N-2);i++){
+    psi_new(i) = update_psi(i);
+  }
+  delta = arma::norm(psi_new-psi)/arma::norm(psi);
+  psi = psi_new;
 }
 
-void PDEintegrator::GaussSeidel(){
-  cout << "Gauss Seidel " << endl;
-  double delta = 100.0;
-  int numit = 0;
-  double psi_norm = 0.0;
-  double psi_n_psi_norm = 0.0;
-  double psi_new = 0.0;
-  while(delta >= atol){
-    numit++;
-    psi_norm = arma::norm(psi);
-    psi_n_psi_norm = 0.0;
-    for(int i=0;i<(N-2)*(N-2);i++){
-       psi_new = update_psi(i);
-       psi_n_psi_norm += pow(psi_new-psi(i),2);
-       psi(i) = psi_new;
-    }
-    delta = sqrt(psi_n_psi_norm)/psi_norm;
-    cout << numit << ".Iteration" << endl;
 
+GaussSeidel::GaussSeidel(int N, arma::vec b, double atol, string vfilename):
+  RelaxationMethods(N, b, atol, vfilename){}
+
+void GaussSeidel::step(){
+  /**
+  Performs one Gauss Seidel relaxation step
+  Return void
+  */
+  double psi_norm = arma::norm(psi);
+  double psi_new_norm = 0.0;
+  double psi_new;
+  for(int i=0;i<(N-2)*(N-2);i++){
+    psi_new = update_psi(i);
+    psi_new_norm += pow(psi_new-psi(i),2);
+    psi(i) = psi_new;
   }
-  psi.save(vfilename,arma::raw_ascii);
-}
-
+  delta = sqrt(psi_new_norm)/psi_norm;
 }
