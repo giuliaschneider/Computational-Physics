@@ -16,13 +16,14 @@ using namespace std;
 
 cg::cg(int N, arma::vec b, double atol, string vfilename):
   PDEintegrator(N, b, atol, vfilename){
+    setA();
+    setP();
     r = b - A*psi;
     d = r;
     maxIter = 1000;
     err.set_size(maxIter);
     err.fill(0.0);
-    setA();
-    setP();
+
   }
 
 void cg::setA(){
@@ -37,7 +38,6 @@ void cg::setA(){
   A.eye(n_innergrid, n_innergrid);
   A = kron(A,D);
   A.diag(-n_innergrid).fill(1); A.diag(n_innergrid).fill(1);
-  cout << A << endl;
 }
 
 void cg::setP(){
@@ -60,6 +60,7 @@ void cg::step(){
   psi += alpha*d;
   r = b - A*psi;
   d = r - (c*arma::as_scalar(r.st()*A*d)) * d;
+  delta = arma::as_scalar(r.st()*r);
 }
 
 void cg::integrate(){
@@ -69,9 +70,10 @@ void cg::integrate(){
   delta = 100.0;
   int numit = 0;
   while(delta >= atol and numit < maxIter){
-    numit++;
+    cout << "Step = " << numit << endl;
     step();
-    err(numit) = arma::as_scalar(r.st()*r);
+    err(numit) = delta;
+    numit++;
   }
   cout << "Done after "<< numit << "iterations" << endl;
   psi.save(vfilename,arma::raw_ascii);
