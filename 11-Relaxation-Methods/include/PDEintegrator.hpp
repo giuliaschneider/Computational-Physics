@@ -42,5 +42,24 @@ public:
   void step();
 };
 
+class cg: public PDEintegrator{
+private:
+  arma::mat A;
+  arma::mat P;
+  arma::vec r;
+  arma::vec d;
+  arma::vec err;
+  double c;
+  double alpha;
+  int maxIter;
+
+public:
+  cg(int N, arma::vec b, double tol, std::string vfilename);
+  void setA();
+  void setP();
+  void step();
+  void integrate();
+
+};
 
 #endif

@@ -1,3 +1,3 @@
-set ( SOURCES poisson2d.cpp PDEintegrator.cpp)
+set ( SOURCES cg.cpp)
 
-add_library( fd STATIC ${SOURCES} )
+add_library( cg STATIC ${SOURCES} )
