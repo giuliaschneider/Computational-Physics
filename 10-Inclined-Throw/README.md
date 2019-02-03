@@ -3,3 +3,8 @@ Many ordinary differential equations, as for example the trajectory of a ball in
 The class <em>Throw</em> wraps up the parameters and right hand side function of the inclined throw problem
 
 The class <em> ODEintegrator</em> is a general class for the integration of autonom first order ODE with n<sub>steps</sub>.
+
+# Required Libraries:
+
+**ARMADILLO** - C++ linear algebra library
+
