@@ -19,15 +19,5 @@ int main(){
   comphys::Wave wave(a, b, h, t0, tend, dt, c);
 
 
-  /*
-  Task 2
-  */
-
-
-  /*
-  Task 3
-  */
-
-
   return 0;
 }

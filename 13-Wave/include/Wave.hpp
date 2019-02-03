@@ -2,7 +2,6 @@
 #ifndef WAVE
 #define WAVE
 
-#include <armadillo>
 
 namespace comphys{
 
@@ -22,21 +21,15 @@ private:
   double b;
 
   double xi = 0;
-  arma::vec x;
-  //arma::vec u_now;
-  //arma::vec u_tt;
-  //arma::vec temp;
   double* u_now;
   double* u_tt;
   double* temp;
   double* pOriginal;
-  arma::mat A;
 
   char filename[160];
 
 private:
   void setIC();
-  void setA();
   void calcWave();
 public:
   Wave(double a, double b, int h, double t0, double tend, double dt, double c);
